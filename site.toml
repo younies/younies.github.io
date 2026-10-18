@@ -18,9 +18,9 @@ exclude = []
 name = "Younies Mahmoud"
 tagline = "Software engineer at Google · Zürich"
 initials = "YM"
-# A photo for the home page, such as "assets/img/avatar.jpg". Without one, the
-# home page shows the initials.
-avatar = ""
+# The picture on the home page: a square image, shown in a circle over the
+# site's gradient. Leave it empty to show the initials instead.
+avatar = "assets/img/avatar.webp"
 
 # The menu at the top of every page.
 [[nav]]
