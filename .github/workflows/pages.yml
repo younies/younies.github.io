@@ -1,0 +1,61 @@
+# Builds the site with pandoc and publishes it to GitHub Pages.
+#
+# Every push and pull request builds the site and checks its links; pushes to
+# main also publish it. In the repository settings, Pages > Build and
+# deployment > Source must be "GitHub Actions".
+
+name: Pages
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# One run per branch at a time. A newer push waits for the current deployment
+# instead of cancelling it halfway.
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  # Keep in step with the pandoc used locally (pandoc --version), so the
+  # published site matches the preview.
+  PANDOC_VERSION: 3.7.0.2
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install pandoc
+        run: |
+          curl -fsSL -o "$RUNNER_TEMP/pandoc.deb" \
+            "https://github.com/jgm/pandoc/releases/download/${PANDOC_VERSION}/pandoc-${PANDOC_VERSION}-1-amd64.deb"
+          sudo dpkg -i "$RUNNER_TEMP/pandoc.deb"
+          pandoc --version | head -n 1
+
+      - name: Build the site and check its links
+        run: make check
+
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: _site
+
+  deploy:
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-24.04
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5
