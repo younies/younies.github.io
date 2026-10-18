@@ -1,7 +1,7 @@
-# younies/public
+# younies.github.io
 
 The source of my personal site,
-**[younies.github.io/public](https://younies.github.io/public/)**: blog posts,
+**[younies.github.io](https://younies.github.io/)**: blog posts,
 the slides and code from my talks, meetups, and projects.
 
 Pages are written in Markdown and built into HTML with
