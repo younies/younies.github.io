@@ -1,0 +1,16 @@
+# The built site (make)
+_site/
+_site.new/
+
+# Slide decks built in talk folders (the site build makes them again)
+slides.html
+slides-offline.html
+
+# Compiled demo programs
+*.class
+*.o
+
+# Editor, OS, and Python files
+.DS_Store
+.vscode/
+__pycache__/

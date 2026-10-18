@@ -1,0 +1,64 @@
+# Settings for tools/build.py. README.md explains each part of the site.
+
+title = "Younies Mahmoud"
+description = "Software engineer at Google working on internationalization: Unicode CLDR, ICU, ICU4X, and Rust. Blog posts, talks with slides and code, and meetups."
+lang = "en"
+
+# Where the site is published. The feed, the sitemap, and the 404 page use it.
+url = "https://younies.github.io/public/"
+
+# The source repository, for the "Code" and "Source" links.
+repo = "https://github.com/younies/public"
+branch = "main"
+
+# Extra files or folders to leave out of the site (glob patterns).
+exclude = []
+
+[author]
+name = "Younies Mahmoud"
+tagline = "Software engineer at Google · Zürich"
+initials = "YM"
+# A photo for the home page, such as "assets/img/avatar.jpg". Without one, the
+# home page shows the initials.
+avatar = ""
+
+# The menu at the top of every page.
+[[nav]]
+title = "Blog"
+path = "blog/"
+
+[[nav]]
+title = "Talks"
+path = "talks/"
+
+[[nav]]
+title = "Meetups"
+path = "meetups/"
+
+[[nav]]
+title = "Projects"
+path = "projects/"
+
+# Links under the name on the home page. Icons: github, linkedin, mail, link.
+[[social]]
+title = "GitHub"
+url = "https://github.com/younies"
+icon = "github"
+
+[[social]]
+title = "LinkedIn"
+url = "https://www.linkedin.com/in/youniesmahmoud"
+icon = "linkedin"
+
+# Sections are folders whose pages are listed newest first. Every page in a
+# section needs a date. Any page can show a list with <!-- list:NAME --> or
+# <!-- list:NAME limit=3 -->.
+[sections.blog]
+title = "Blog"
+feed = true  # writes blog/feed.xml
+
+[sections.talks]
+title = "Talks"
+
+[sections.meetups]
+title = "Meetups"
