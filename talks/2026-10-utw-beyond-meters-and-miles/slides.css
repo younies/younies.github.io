@@ -674,3 +674,71 @@
 .reveal .progress span {
   background: linear-gradient(90deg, var(--indigo), var(--pink));
 }
+
+/* "Follow … through the CLDR data": the path lights up, and a chip at the
+   bottom carries the value from step to step. */
+.reveal svg.unit-tree .trace {
+  fill: none;
+  stroke: #db2777;
+  stroke-width: 5;
+}
+
+.reveal svg.unit-tree .trace.trace-bad {
+  stroke: #ef4444;
+  stroke-dasharray: 10 7;
+}
+
+.reveal svg.unit-tree .trace-line {
+  fill: none;
+  stroke: #db2777;
+  stroke-width: 5;
+  stroke-linecap: round;
+}
+
+.reveal svg.unit-tree .trace-chip rect {
+  fill: #db2777;
+}
+
+.reveal svg.unit-tree .trace-chip.final rect {
+  fill: #059669;
+}
+
+.reveal svg.unit-tree .trace-chip text {
+  font-size: 19px;
+  font-weight: 700;
+  fill: #ffffff;
+}
+
+/* "Gender vs. case": two cards that point in opposite directions. */
+.reveal .gram-cards {
+  gap: 1em;
+  margin-top: 0.5em;
+}
+
+.reveal .gram-card {
+  box-sizing: border-box;
+  padding: 0.4em 0.8em 0.6em;
+  font-size: 0.72em;
+  text-align: left;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.1);
+}
+
+.reveal .gram-card.gender {
+  border-top: 10px solid #7c3aed;
+}
+
+.reveal .gram-card.case {
+  border-top: 10px solid #0d9488;
+}
+
+.reveal .gram-card h3 {
+  margin: 0.2em 0 0.4em;
+  font-size: 1.15em;
+  color: var(--slate-900);
+}
+
+.reveal .gram-card p {
+  margin: 0.35em 0;
+}

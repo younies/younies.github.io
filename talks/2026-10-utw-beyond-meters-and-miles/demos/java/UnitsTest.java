@@ -128,6 +128,26 @@ public class UnitsTest {
         assertOnSlide("input units must be convertible or reciprocal", error);
     }
 
+    // Slide "Follow 1.8 m through the CLDR data": the chips at the bottom.
+    static void followPersonHeight() {
+        assertOnSlide("1.8 m = 5.91 ft", "1.8 m = " + format("foot", convert("meter", "foot", 1.8),
+                SHORT, Precision.maxFraction(2)));
+        FormattedNumber result = personHeight("en-US").format(1.8);
+        assertOnSlide("foot-and-inch, nearest 1 in: 5 feet, 11 inches",
+                result.getOutputUnit().getIdentifier() + ", nearest 1 in: " + result);
+    }
+
+    // Slide "Follow 150 m through the CLDR data": the first row fails, the next one matches.
+    static void followRoad() {
+        assertOnSlide("150 m = 0.09 mi", "150 m = " + format("mile", convert("meter", "mile", 150),
+                SHORT, Precision.maxFraction(2)));
+        assertOnSlide("150 m = 492 ft", "150 m = " + format("foot", convert("meter", "foot", 150),
+                SHORT, Precision.integer()));
+        FormattedNumber result = formatWithUsage("en-US", "meter", "road", 150);
+        assertOnSlide("foot, round to 50: 500 feet",
+                result.getOutputUnit().getIdentifier() + ", round to 50: " + result);
+    }
+
     // Slide "Step 1: Single convert": a factor, a factor and an offset, a reciprocal.
     static void stepOneConvert() {
         assertOnSlide("5.9055 ft", format("foot", convert("meter", "foot", 1.8),
@@ -258,6 +278,19 @@ public class UnitsTest {
                 .unitWidth(UnitWidth.FULL_NAME)
                 .locale(ULocale.FRENCH)
                 .format(1);
+    }
+
+    // Slide "Gender vs. case": one example on each card.
+    static void genderVsCase() {
+        FormattedNumber month = frenchDuration("month");
+        FormattedNumber week = frenchDuration("week");
+        assertOnSlide("1 mois offert · 1 semaine offert**e**",
+                month + " offert · " + week + " offert**e**");
+        String nominative = formatWithCase("de", "kilometer", 100, GrammaticalCase.NOMINATIVE);
+        String dative = formatWithCase("de", "kilometer", 100, GrammaticalCase.DATIVE);
+        assertEquals(nominative + "n", dative);
+        assertOnSlide("100 Kilometer · mit 100 Kilometer**n**",
+                nominative + " · mit " + nominative + "**n**");
     }
 
     // Slide "Grammatical gender changes the message" (French free trial).
@@ -470,6 +503,8 @@ public class UnitsTest {
         failed += run("How tall are you?", UnitsTest::howTallAreYou);
         failed += run("How tall is your child?", UnitsTest::howTallIsYourChild);
         failed += run("What the CLDR data says", UnitsTest::whatTheCldrDataSays);
+        failed += run("Follow 1.8 m through the CLDR data", UnitsTest::followPersonHeight);
+        failed += run("Follow 150 m through the CLDR data", UnitsTest::followRoad);
         failed += run("Conversion data in CLDR", UnitsTest::conversionDataInCldr);
         failed += run("Every unit hangs from a base unit", UnitsTest::everyUnitHangsFromABaseUnit);
         failed += run("Compound units: each part climbs its own tree", UnitsTest::compoundUnits);
@@ -482,10 +517,11 @@ public class UnitsTest {
         failed += run("1.7 meters: set your own precision", UnitsTest::ownPrecision);
         failed += run("Person height: 1.8 meters", UnitsTest::personHeightTable);
         failed += run("Road distance: same code, different values", UnitsTest::roadDistance);
-        failed += run("Grammatical gender changes the message", UnitsTest::genderChangesTheMessage);
+        failed += run("Gender vs. case", UnitsTest::genderVsCase);
+        failed += run("Grammatical gender: the unit changes the sentence", UnitsTest::genderChangesTheMessage);
         failed += run("Tutorial 2: grammatical gender", UnitsTest::tutorialTwo);
         failed += run("The gender is only known at runtime", UnitsTest::genderAtRuntime);
-        failed += run("Grammatical case changes the unit", UnitsTest::caseChangesTheUnit);
+        failed += run("Grammatical case: the sentence changes the unit", UnitsTest::caseChangesTheUnit);
         failed += run("The same unit in different cases", UnitsTest::sameUnitInDifferentCases);
         failed += run("Tutorial 3: grammatical case", UnitsTest::tutorialThree);
         System.out.println(failed == 0 ? "ICU4J: all slide tests passed"

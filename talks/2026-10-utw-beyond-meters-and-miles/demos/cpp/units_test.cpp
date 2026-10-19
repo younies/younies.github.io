@@ -352,10 +352,10 @@ int main(int argc, char** argv) {
     failed += run("1.7 meters: set your own precision", ownPrecision);
     failed += run("Person height: 1.8 meters", personHeightTable);
     failed += run("Road distance: same code, different values", roadDistance);
-    failed += run("Grammatical gender changes the message", genderChangesTheMessage);
+    failed += run("Grammatical gender: the unit changes the sentence", genderChangesTheMessage);
     failed += run("Tutorial 2: grammatical gender", tutorialTwo);
     failed += run("The gender is only known at runtime", genderAtRuntime);
-    failed += run("Grammatical case changes the unit", caseChangesTheUnit);
+    failed += run("Grammatical case: the sentence changes the unit", caseChangesTheUnit);
     failed += run("The same unit in different cases", sameUnitInDifferentCases);
     failed += run("Tutorial 3: grammatical case", tutorialThree);
     std::cout << (failed == 0 ? "ICU4C: all slide tests passed\n"

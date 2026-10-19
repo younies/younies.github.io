@@ -23,12 +23,12 @@ mostly on measurement units, grammatical inflection, and number formatting.
 In the next half hour, we'll see why formatting a measurement is much more than
 translating a label, and how CLDR and ICU do the hard work for you.
 
-Time plan (45-minute slot): about 30 minutes of content, then 10 minutes of
+Time plan (45-minute slot): about 32 minutes of content, then 8 minutes of
 questions and 5 minutes of buffer.
-Checkpoints: slide 7 at 5:00 · slide 15 at 9:05 · slide 21 at 12:30 ·
-slide 28 at 19:00 · slide 35 at 28:00 · slide 39 at 30:30.
-Skip if behind: the ICU4C walkthrough (slide 24), the weather bonus (slide 27),
-the runtime-gender slide (slide 31), and the cases table (slide 33).
+Checkpoints: slide 7 at 5:00 · slide 17 at 10:25 · slide 23 at 13:50 ·
+slide 30 at 19:50 · slide 40 at 27:50 · slide 44 at 31:50.
+Skip if behind: the second walkthrough (slide 12), the ICU4C walkthrough (slide 26),
+the weather bonus (slide 29), the runtime-gender slide (slide 35), and the cases table (slide 38).
 :::
 
 # Is 30 degrees hot or cold?
@@ -430,6 +430,288 @@ In the US, road distances under 100 ft round to the nearest 10 ft (50 feet), and
 In the UK, it's the same thresholds in yards (30 yards, 2 yards), and in 001 in meters (300 Meter, 20 Meter, 7 Meter).
 :::
 
+# Follow 1.8 m through the CLDR data
+
+Inputs: **1.8 m** · `en-US` · usage `person-height`
+
+```{=html}
+<svg class="unit-tree" viewBox="0 0 1060 480" role="img" aria-label="The same decision graph. Step by step, 1.8 meters goes from length to person-height, to the region CA GB IN US, to the row at least 3 feet: foot-and-inch, nearest inch, 5 feet, 11 inches.">
+  <defs>
+    <linearGradient id="pref-cat" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#312e81"/><stop offset="1" stop-color="#4f46e5"/></linearGradient>
+    <linearGradient id="pref-height" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4f46e5"/><stop offset="1" stop-color="#7c3aed"/></linearGradient>
+    <linearGradient id="pref-road" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#059669"/><stop offset="1" stop-color="#0d9488"/></linearGradient>
+  </defs>
+  <text class="tree-label" x="14" y="20">CATEGORY</text>
+  <text class="tree-label" x="180" y="20">USAGE</text>
+  <text class="tree-label" x="392" y="20">REGION</text>
+  <text class="tree-label" x="580" y="20">VALUE (geq)  ➜  OUTPUT UNIT &amp; PRECISION</text>
+
+  <!-- Connector lines -->
+  <g stroke="#cbd5e1" stroke-width="2.5" fill="none">
+    <!-- length -> usages -->
+    <path d="M126 216 L165 112"/><path d="M126 216 L165 308"/>
+    <!-- person-height -> regions -->
+    <path d="M335 112 L375 58"/><path d="M335 112 L375 112"/><path d="M335 112 L375 162"/>
+    <!-- road -> regions -->
+    <path d="M335 308 L375 236"/><path d="M335 308 L375 308"/><path d="M335 308 L375 380"/>
+    <!-- regions -> thresholds -->
+    <line x1="545" y1="58" x2="815" y2="58"/>
+    <line x1="545" y1="112" x2="575" y2="112"/>
+    <line x1="545" y1="162" x2="575" y2="162"/>
+    <line x1="545" y1="236" x2="895" y2="236"/>
+    <line x1="545" y1="308" x2="895" y2="308"/>
+    <line x1="545" y1="380" x2="895" y2="380"/>
+  </g>
+
+  <!-- Category & Usage pills -->
+  <g class="tree-compound">
+    <rect x="10" y="190" width="116" height="52" rx="26" fill="url(#pref-cat)"/><text x="68" y="223">length</text>
+    <rect x="165" y="88" width="170" height="48" rx="24" fill="url(#pref-height)"/><text x="250" y="119">person-height</text>
+    <rect x="165" y="284" width="170" height="48" rx="24" fill="url(#pref-road)"/><text x="250" y="315">road</text>
+  </g>
+
+  <!-- Region boxes -->
+  <g class="tree-leaf">
+    <rect x="375" y="36" width="170" height="44" rx="10"/><text class="name" x="460" y="64" style="font-size:17px">CA · GB · IN · US</text>
+    <rect x="375" y="90" width="170" height="44" rx="10"/><text class="name" x="460" y="118" style="font-size:17px">FR · EG · ES · …</text>
+    <rect x="375" y="140" width="170" height="44" rx="10"/><text class="name" x="460" y="168" style="font-size:17px">001 (world)</text>
+
+    <rect x="375" y="210" width="170" height="52" rx="10"/><text class="name" x="460" y="243" style="font-size:19px">US</text>
+    <rect x="375" y="282" width="170" height="52" rx="10"/><text class="name" x="460" y="315" style="font-size:19px">GB</text>
+    <rect x="375" y="354" width="170" height="52" rx="10"/><text class="name" x="460" y="387" style="font-size:18px">001 (world)</text>
+  </g>
+
+  <!-- Output unit + precision cards -->
+  <g class="tree-leaf">
+    <!-- person-height: CA GB IN US -->
+    <rect x="575" y="34" width="232" height="48" rx="10"/>
+    <text class="rate meter" x="691" y="53">≥ 3 ft · nearest 1 in</text>
+    <text class="name" x="691" y="74" style="font-size:18px">foot-and-inch</text>
+
+    <rect x="815" y="34" width="235" height="48" rx="10"/>
+    <text class="rate meter" x="932" y="53">&lt; 3 ft · nearest 1 in</text>
+    <text class="name" x="932" y="74" style="font-size:18px">inch</text>
+
+    <!-- person-height: FR EG ... -->
+    <rect x="575" y="90" width="475" height="44" rx="10"/>
+    <text class="name" x="691" y="118" style="font-size:18px">meter-and-centimeter</text>
+    <text class="rate meter" x="932" y="117">nearest 1 cm</text>
+
+    <!-- person-height: 001 -->
+    <rect x="575" y="140" width="475" height="44" rx="10"/>
+    <text class="name" x="691" y="168" style="font-size:18px">centimeter</text>
+    <text class="rate meter" x="932" y="167">integer / 2 sig. digits</text>
+
+    <!-- road: US -->
+    <rect x="575" y="206" width="152" height="60" rx="10"/>
+    <text class="rate kilogram" x="651" y="226">≥ 0.5 mi</text>
+    <text class="name" x="651" y="246" style="font-size:18px">mile</text>
+    <text class="rate" x="651" y="261" style="fill:#64748b;font-size:12px">integer / 2 sig.</text>
+
+    <rect x="735" y="206" width="152" height="60" rx="10"/>
+    <text class="rate kilogram" x="811" y="226">≥ 100 ft</text>
+    <text class="name" x="811" y="246" style="font-size:18px">foot</text>
+    <text class="rate" x="811" y="261" style="fill:#64748b;font-size:12px">round to 50</text>
+
+    <rect x="895" y="206" width="155" height="60" rx="10"/>
+    <text class="rate kilogram" x="972" y="226">≥ 10 ft · &lt; 10 ft</text>
+    <text class="name" x="972" y="246" style="font-size:18px">foot</text>
+    <text class="rate" x="972" y="261" style="fill:#64748b;font-size:12px">round to 10 · 1</text>
+
+    <!-- road: GB -->
+    <rect x="575" y="278" width="152" height="60" rx="10"/>
+    <text class="rate kilogram" x="651" y="298">≥ 0.5 mi</text>
+    <text class="name" x="651" y="318" style="font-size:18px">mile</text>
+    <text class="rate" x="651" y="333" style="fill:#64748b;font-size:12px">integer / 2 sig.</text>
+
+    <rect x="735" y="278" width="152" height="60" rx="10"/>
+    <text class="rate kilogram" x="811" y="298">≥ 100 yd</text>
+    <text class="name" x="811" y="318" style="font-size:18px">yard</text>
+    <text class="rate" x="811" y="333" style="fill:#64748b;font-size:12px">round to 50</text>
+
+    <rect x="895" y="278" width="155" height="60" rx="10"/>
+    <text class="rate kilogram" x="972" y="298">≥ 10 yd · &lt; 10 yd</text>
+    <text class="name" x="972" y="318" style="font-size:18px">yard</text>
+    <text class="rate" x="972" y="333" style="fill:#64748b;font-size:12px">round to 10 · 1</text>
+
+    <!-- road: 001 -->
+    <rect x="575" y="350" width="152" height="60" rx="10"/>
+    <text class="rate kilogram" x="651" y="370">≥ 0.9 km</text>
+    <text class="name" x="651" y="390" style="font-size:18px">kilometer</text>
+    <text class="rate" x="651" y="405" style="fill:#64748b;font-size:12px">integer / 2 sig.</text>
+
+    <rect x="735" y="350" width="152" height="60" rx="10"/>
+    <text class="rate kilogram" x="811" y="370">≥ 300 m</text>
+    <text class="name" x="811" y="390" style="font-size:18px">meter</text>
+    <text class="rate" x="811" y="405" style="fill:#64748b;font-size:12px">round to 50</text>
+
+    <rect x="895" y="350" width="155" height="60" rx="10"/>
+    <text class="rate kilogram" x="972" y="370">≥ 10 m · &lt; 10 m</text>
+    <text class="name" x="972" y="390" style="font-size:18px">meter</text>
+    <text class="rate" x="972" y="405" style="fill:#64748b;font-size:12px">round to 10 · 1</text>
+  </g>
+  <text class="tree-label" x="14" y="422">THE VALUE</text>
+  <g class="fragment" data-fragment-index="0"><rect class="trace" x="6" y="186" width="124" height="60" rx="30"/></g>
+  <g class="fragment fade-in-then-out trace-chip" data-fragment-index="0"><rect x="10" y="430" width="260" height="40" rx="20"/><text x="140" y="457">📏 1.8 m: meter → length</text></g>
+  <g class="fragment" data-fragment-index="1"><path class="trace-line" d="M126 216 L165 112"/><rect class="trace" x="161" y="84" width="178" height="56" rx="28"/></g>
+  <g class="fragment fade-in-then-out trace-chip" data-fragment-index="1"><rect x="150" y="430" width="240" height="40" rx="20"/><text x="270" y="457">🎯 usage: person-height</text></g>
+  <g class="fragment" data-fragment-index="2"><path class="trace-line" d="M335 112 L375 58"/><rect class="trace" x="371" y="32" width="178" height="52" rx="14"/></g>
+  <g class="fragment fade-in-then-out trace-chip" data-fragment-index="2"><rect x="360" y="430" width="200" height="40" rx="20"/><text x="460" y="457">🌍 en-US → US</text></g>
+  <g class="fragment" data-fragment-index="3"><path class="trace-line" d="M545 58 L575 58"/><rect class="trace" x="571" y="30" width="240" height="56" rx="14"/></g>
+  <g class="fragment fade-in-then-out trace-chip" data-fragment-index="3"><rect x="540" y="430" width="320" height="40" rx="20"/><text x="700" y="457">1.8 m = 5.91 ft · ≥ 3 ft ✓</text></g>
+  <g class="fragment trace-chip final" data-fragment-index="4"><rect x="540" y="430" width="510" height="40" rx="20"/><text x="795" y="457">➜ foot-and-inch, nearest 1 in: 5 feet, 11 inches ✅</text></g>
+</svg>
+```
+
+::: notes
+[7:00–7:40] Click once per step; the pink chip at the bottom is the value moving through the graph.
+1. meter → category length. 2. usage person-height. 3. en-US → the row for CA GB IN US.
+4. Convert to the row's unit to check the threshold: 1.8 m = 5.91 ft, at least 3 ft.
+5. That row gives the unit and the precision: foot-and-inch, to the nearest inch: "5 feet, 11 inches".
+:::
+
+# Follow 150 m through the CLDR data
+
+Inputs: **150 m** · `en-US` · usage `road`
+
+```{=html}
+<svg class="unit-tree" viewBox="0 0 1060 480" role="img" aria-label="The same decision graph. Step by step, 150 meters goes from length to road, to the region US, fails the row at least 0.5 miles, matches the row at least 100 feet: foot, round to 50, 500 feet.">
+  <defs>
+    <linearGradient id="pref-cat" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#312e81"/><stop offset="1" stop-color="#4f46e5"/></linearGradient>
+    <linearGradient id="pref-height" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4f46e5"/><stop offset="1" stop-color="#7c3aed"/></linearGradient>
+    <linearGradient id="pref-road" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#059669"/><stop offset="1" stop-color="#0d9488"/></linearGradient>
+  </defs>
+  <text class="tree-label" x="14" y="20">CATEGORY</text>
+  <text class="tree-label" x="180" y="20">USAGE</text>
+  <text class="tree-label" x="392" y="20">REGION</text>
+  <text class="tree-label" x="580" y="20">VALUE (geq)  ➜  OUTPUT UNIT &amp; PRECISION</text>
+
+  <!-- Connector lines -->
+  <g stroke="#cbd5e1" stroke-width="2.5" fill="none">
+    <!-- length -> usages -->
+    <path d="M126 216 L165 112"/><path d="M126 216 L165 308"/>
+    <!-- person-height -> regions -->
+    <path d="M335 112 L375 58"/><path d="M335 112 L375 112"/><path d="M335 112 L375 162"/>
+    <!-- road -> regions -->
+    <path d="M335 308 L375 236"/><path d="M335 308 L375 308"/><path d="M335 308 L375 380"/>
+    <!-- regions -> thresholds -->
+    <line x1="545" y1="58" x2="815" y2="58"/>
+    <line x1="545" y1="112" x2="575" y2="112"/>
+    <line x1="545" y1="162" x2="575" y2="162"/>
+    <line x1="545" y1="236" x2="895" y2="236"/>
+    <line x1="545" y1="308" x2="895" y2="308"/>
+    <line x1="545" y1="380" x2="895" y2="380"/>
+  </g>
+
+  <!-- Category & Usage pills -->
+  <g class="tree-compound">
+    <rect x="10" y="190" width="116" height="52" rx="26" fill="url(#pref-cat)"/><text x="68" y="223">length</text>
+    <rect x="165" y="88" width="170" height="48" rx="24" fill="url(#pref-height)"/><text x="250" y="119">person-height</text>
+    <rect x="165" y="284" width="170" height="48" rx="24" fill="url(#pref-road)"/><text x="250" y="315">road</text>
+  </g>
+
+  <!-- Region boxes -->
+  <g class="tree-leaf">
+    <rect x="375" y="36" width="170" height="44" rx="10"/><text class="name" x="460" y="64" style="font-size:17px">CA · GB · IN · US</text>
+    <rect x="375" y="90" width="170" height="44" rx="10"/><text class="name" x="460" y="118" style="font-size:17px">FR · EG · ES · …</text>
+    <rect x="375" y="140" width="170" height="44" rx="10"/><text class="name" x="460" y="168" style="font-size:17px">001 (world)</text>
+
+    <rect x="375" y="210" width="170" height="52" rx="10"/><text class="name" x="460" y="243" style="font-size:19px">US</text>
+    <rect x="375" y="282" width="170" height="52" rx="10"/><text class="name" x="460" y="315" style="font-size:19px">GB</text>
+    <rect x="375" y="354" width="170" height="52" rx="10"/><text class="name" x="460" y="387" style="font-size:18px">001 (world)</text>
+  </g>
+
+  <!-- Output unit + precision cards -->
+  <g class="tree-leaf">
+    <!-- person-height: CA GB IN US -->
+    <rect x="575" y="34" width="232" height="48" rx="10"/>
+    <text class="rate meter" x="691" y="53">≥ 3 ft · nearest 1 in</text>
+    <text class="name" x="691" y="74" style="font-size:18px">foot-and-inch</text>
+
+    <rect x="815" y="34" width="235" height="48" rx="10"/>
+    <text class="rate meter" x="932" y="53">&lt; 3 ft · nearest 1 in</text>
+    <text class="name" x="932" y="74" style="font-size:18px">inch</text>
+
+    <!-- person-height: FR EG ... -->
+    <rect x="575" y="90" width="475" height="44" rx="10"/>
+    <text class="name" x="691" y="118" style="font-size:18px">meter-and-centimeter</text>
+    <text class="rate meter" x="932" y="117">nearest 1 cm</text>
+
+    <!-- person-height: 001 -->
+    <rect x="575" y="140" width="475" height="44" rx="10"/>
+    <text class="name" x="691" y="168" style="font-size:18px">centimeter</text>
+    <text class="rate meter" x="932" y="167">integer / 2 sig. digits</text>
+
+    <!-- road: US -->
+    <rect x="575" y="206" width="152" height="60" rx="10"/>
+    <text class="rate kilogram" x="651" y="226">≥ 0.5 mi</text>
+    <text class="name" x="651" y="246" style="font-size:18px">mile</text>
+    <text class="rate" x="651" y="261" style="fill:#64748b;font-size:12px">integer / 2 sig.</text>
+
+    <rect x="735" y="206" width="152" height="60" rx="10"/>
+    <text class="rate kilogram" x="811" y="226">≥ 100 ft</text>
+    <text class="name" x="811" y="246" style="font-size:18px">foot</text>
+    <text class="rate" x="811" y="261" style="fill:#64748b;font-size:12px">round to 50</text>
+
+    <rect x="895" y="206" width="155" height="60" rx="10"/>
+    <text class="rate kilogram" x="972" y="226">≥ 10 ft · &lt; 10 ft</text>
+    <text class="name" x="972" y="246" style="font-size:18px">foot</text>
+    <text class="rate" x="972" y="261" style="fill:#64748b;font-size:12px">round to 10 · 1</text>
+
+    <!-- road: GB -->
+    <rect x="575" y="278" width="152" height="60" rx="10"/>
+    <text class="rate kilogram" x="651" y="298">≥ 0.5 mi</text>
+    <text class="name" x="651" y="318" style="font-size:18px">mile</text>
+    <text class="rate" x="651" y="333" style="fill:#64748b;font-size:12px">integer / 2 sig.</text>
+
+    <rect x="735" y="278" width="152" height="60" rx="10"/>
+    <text class="rate kilogram" x="811" y="298">≥ 100 yd</text>
+    <text class="name" x="811" y="318" style="font-size:18px">yard</text>
+    <text class="rate" x="811" y="333" style="fill:#64748b;font-size:12px">round to 50</text>
+
+    <rect x="895" y="278" width="155" height="60" rx="10"/>
+    <text class="rate kilogram" x="972" y="298">≥ 10 yd · &lt; 10 yd</text>
+    <text class="name" x="972" y="318" style="font-size:18px">yard</text>
+    <text class="rate" x="972" y="333" style="fill:#64748b;font-size:12px">round to 10 · 1</text>
+
+    <!-- road: 001 -->
+    <rect x="575" y="350" width="152" height="60" rx="10"/>
+    <text class="rate kilogram" x="651" y="370">≥ 0.9 km</text>
+    <text class="name" x="651" y="390" style="font-size:18px">kilometer</text>
+    <text class="rate" x="651" y="405" style="fill:#64748b;font-size:12px">integer / 2 sig.</text>
+
+    <rect x="735" y="350" width="152" height="60" rx="10"/>
+    <text class="rate kilogram" x="811" y="370">≥ 300 m</text>
+    <text class="name" x="811" y="390" style="font-size:18px">meter</text>
+    <text class="rate" x="811" y="405" style="fill:#64748b;font-size:12px">round to 50</text>
+
+    <rect x="895" y="350" width="155" height="60" rx="10"/>
+    <text class="rate kilogram" x="972" y="370">≥ 10 m · &lt; 10 m</text>
+    <text class="name" x="972" y="390" style="font-size:18px">meter</text>
+    <text class="rate" x="972" y="405" style="fill:#64748b;font-size:12px">round to 10 · 1</text>
+  </g>
+  <text class="tree-label" x="14" y="422">THE VALUE</text>
+  <g class="fragment" data-fragment-index="0"><rect class="trace" x="6" y="186" width="124" height="60" rx="30"/></g>
+  <g class="fragment fade-in-then-out trace-chip" data-fragment-index="0"><rect x="10" y="430" width="260" height="40" rx="20"/><text x="140" y="457">📏 150 m: meter → length</text></g>
+  <g class="fragment" data-fragment-index="1"><path class="trace-line" d="M126 216 L165 308"/><rect class="trace" x="161" y="280" width="178" height="56" rx="28"/></g>
+  <g class="fragment fade-in-then-out trace-chip" data-fragment-index="1"><rect x="190" y="430" width="160" height="40" rx="20"/><text x="270" y="457">🎯 usage: road</text></g>
+  <g class="fragment" data-fragment-index="2"><path class="trace-line" d="M335 308 L375 236"/><rect class="trace" x="371" y="206" width="178" height="60" rx="14"/></g>
+  <g class="fragment fade-in-then-out trace-chip" data-fragment-index="2"><rect x="360" y="430" width="200" height="40" rx="20"/><text x="460" y="457">🌍 en-US → US</text></g>
+  <g class="fragment" data-fragment-index="3"><path class="trace-line" d="M545 236 L575 236"/><rect class="trace trace-bad" x="571" y="202" width="160" height="68" rx="14"/></g>
+  <g class="fragment fade-in-then-out trace-chip" data-fragment-index="3"><rect x="500" y="430" width="330" height="40" rx="20"/><text x="665" y="457">150 m = 0.09 mi · ≥ 0.5 mi ✗</text></g>
+  <g class="fragment" data-fragment-index="4"><path class="trace-line" d="M727 236 L735 236"/><rect class="trace" x="731" y="202" width="160" height="68" rx="14"/></g>
+  <g class="fragment fade-in-then-out trace-chip" data-fragment-index="4"><rect x="620" y="430" width="330" height="40" rx="20"/><text x="785" y="457">150 m = 492 ft · ≥ 100 ft ✓</text></g>
+  <g class="fragment trace-chip final" data-fragment-index="5"><rect x="560" y="430" width="490" height="40" rx="20"/><text x="805" y="457">➜ foot, round to 50: 500 feet ✅</text></g>
+</svg>
+```
+
+::: notes
+[7:40–8:20] Same graph, a road distance. 1. length. 2. usage road. 3. en-US → US.
+4. The first row: 150 m is only 0.09 miles, less than 0.5 mi, so it does not match.
+5. The next row: 150 m = 492 ft, at least 100 ft: it matches (the first match wins).
+6. That row says foot, rounded to the nearest 50: "500 feet".
+:::
+
 # CLDR picked the unit. Now convert!
 
 We have **1.8 meters**. CLDR says: **foot-and-inch**.
@@ -493,7 +775,7 @@ We have **1.8 meters**. CLDR says: **foot-and-inch**.
 :::
 
 ::: notes
-[7:00–7:30] Ask: how many feet is 1.8 meters? Most people need a calculator, and a table.
+[8:20–8:50] Ask: how many feet is 1.8 meters? Most people need a calculator, and a table.
 Click through quickly: each arrow is one conversion someone needs (meter → foot, then foot → inch
 for Sam's height; then other pairs and other quantities).
 Then every pair: 8 length units already make 28 pairs, each with its own rate.
@@ -528,7 +810,7 @@ One row per unit: every unit converts to **one base unit**
 ::::
 
 ::: notes
-[7:30–8:00] One row per unit instead of one per pair. Click once per bullet:
+[8:50–9:20] One row per unit instead of one per pair. Click once per bullet:
 1. baseUnit: foot, inch, and mile all point to meter; fahrenheit points to kelvin.
 2. factor: constants like ft_to_m are exact, so the factors are exact fractions.
 3. offset: fahrenheit needs an offset as well as a factor.
@@ -614,7 +896,7 @@ Source: CLDR common/supplemental/units.xml (the systems attribute is omitted on 
 ::::
 
 ::: notes
-[8:00–8:35] Each quantity has its own separate tree rooted at a base unit; every other unit hangs from its base unit.
+[9:20–9:55] Each quantity has its own separate tree rooted at a base unit; every other unit hangs from its base unit.
 Each arrow points to the base unit and carries its rate: follow the arrow up (× the rate),
 or go against it, down to another unit (÷ the rate). To convert, go up to the base unit, then down to the target unit.
 Click 1: meter → foot (our 1.8 m). Click 2: celsius → kelvin → fahrenheit, the opening poll again.
@@ -682,7 +964,7 @@ Prefixed units such as centimeter and kilometer come from SI prefixes, not their
 ::::
 
 ::: notes
-[8:35–9:05] ICU parses the unit identifier into parts, and each part follows its arrow to its base unit.
+[9:55–10:25] ICU parses the unit identifier into parts, and each part follows its arrow to its base unit.
 The rate of the compound unit is just the product of the rates on the arrows (divided for "per" parts):
 foot-pound → meter-kilogram: 0.3048 × 0.45359237 = 0.138255; and back, 1 ÷ 0.138255 = 7.233.
 ICU normalizes the identifiers (kilogram-meter → pound-foot), so formatting gives "7.233 pound-feet".
@@ -696,7 +978,7 @@ Every value is a test case in demos/java/UnitsTest.java (internal UnitsConverter
 ## Convert, cascade, round, and route
 
 ::: notes
-[9:05] Checkpoint. It looks easy… until you implement it.
+[10:25] Checkpoint. It looks easy… until you implement it.
 :::
 
 # What ICU does for 1.8 meters in en-US
@@ -707,7 +989,7 @@ Every value is a test case in demos/java/UnitsTest.java (internal UnitsConverter
 4. **Route:** pick the best unit combination for *this* value
 
 ::: notes
-[9:05–9:15] Each step looks trivial. Each one hides an edge case.
+[10:25–10:35] Each step looks trivial. Each one hides an edge case.
 In ICU: UnitsConverter does one conversion; ComplexUnitsConverter chains them for mixed units
 (and rounds the last unit, then carries back up the chain); UnitsRouter picks the unit per value.
 :::
@@ -724,7 +1006,7 @@ ICU turns the CLDR data into a converter for each pair of units, with exact rati
 :::
 
 ::: notes
-[9:15–9:50] Three kinds of conversion, one per click.
+[10:35–11:10] Three kinds of conversion, one per click.
 1. Most units: just a factor (meter → foot).
 2. Temperature: a factor and an offset (the opening poll: 30°C = 86°F).
 3. Fuel consumption: liters per 100 km goes down when the car is better; miles per gallon goes up.
@@ -745,7 +1027,7 @@ Mixed units depend on the region:
 | ar-EG | متر و٨٠ سنتيمتر | meter-and-centimeter |
 
 ::: notes
-[9:50–10:20] 10.8661 inches rounds to 11 inches (Step 3 shows what happens when rounding overflows).
+[11:10–11:40] 10.8661 inches rounds to 11 inches (Step 3 shows what happens when rounding overflows).
 French puts a no-break space (U+00A0) between the number and the unit.
 Arabic drops the numeral for "one": متر alone means "one meter".
 It also uses Arabic-Indic digits (٨٠).
@@ -765,8 +1047,8 @@ Round the inches → **12 in**… but 12 inches is **1 foot**!
 ICU rounds the smallest unit, then carries the overflow back up the cascade (inches → feet).
 
 ::: notes
-[10:20–11:30] ICU rounds the smallest unit, then carries the overflow back up the cascade.
-Without a CLDR skeleton, the default rounding of the smallest unit is about to change (ICU-23558):
+[11:40–12:50] ICU rounds the smallest unit, then carries the overflow back up the cascade.
+Without a CLDR skeleton, the default rounding of the smallest unit is about to change:
 we will see it in Tutorial 1 with 1.7 m. Callers can always set their own `.precision(...)`.
 :::
 
@@ -790,7 +1072,7 @@ Same values in `en-GB`: 150 yards · 0.56 miles · 75 miles
 :::
 
 ::: notes
-[11:30–12:30] One row per click. Real ICU output. The router uses the converter to check each CLDR preference
+[12:50–13:50] One row per click. Real ICU output. The router uses the converter to check each CLDR preference
 row in order and picks the first one whose threshold the value meets.
 Last click: the UK uses yards for short road distances.
 :::
@@ -800,7 +1082,7 @@ Last click: the UK uses yards for short road distances.
 ## Person height and road distance (ICU4J and ICU4C)
 
 ::: notes
-[12:30] Checkpoint.
+[13:50] Checkpoint.
 :::
 
 # ICU4J
@@ -834,7 +1116,7 @@ MeasureUnit unit = result.getOutputUnit();
 ::::
 
 ::: notes
-[12:30–13:45] Click through the highlighted lines:
+[13:50–15:05] Click through the highlighted lines:
 1–5: one formatter, built once and reused.
 2: the input unit, what we measured.
 3: the width (full unit names here).
@@ -875,7 +1157,7 @@ Same locale, same value: without the usage, ICU formats the unit you gave it, wi
 :::
 
 ::: notes
-[13:45–14:15] Click 1: the usage line is gone. Click 2: "1.8 meters", even for en-US.
+[15:05–15:35] Click 1: the usage line is gone. Click 2: "1.8 meters", even for en-US.
 Click 3: compare with the previous slide. The locale alone never converts units:
 you have to tell ICU what the value is for.
 If asked: in ICU4J, getOutputUnit() returns null when no usage is set.
@@ -910,7 +1192,7 @@ const char* id = unit.getIdentifier();
 ::::
 
 ::: notes
-[14:15–15:00] Click: the formatter (same inputs as Java, plus UErrorCode), then format, then the output unit.
+[15:35–16:20] Click: the formatter (same inputs as Java, plus UErrorCode), then format, then the output unit.
 Test: demos/cpp/units_test.cpp
 Skip if behind: say the C++ API mirrors the Java one and move on.
 Keep the MeasureUnit in a variable: getIdentifier() points into the object.
@@ -948,14 +1230,15 @@ String twoDecimals = formatter
 ::::
 
 ::: {.key-callout .fragment data-fragment-index="3"}
-🔧 **A small fix is coming soon:** by default, the last unit will be rounded to an integer (ICU-23558)
+🔧 **A small fix is coming soon:** by default, the last unit will be rounded to an integer
 :::
 
 ::: notes
-[15:00–16:00] Why did we use 1.8 m? Because with 1.7 m, today's default gives "5 feet, 6.9 inches".
+[16:20–17:20] Why did we use 1.8 m? Because with 1.7 m, today's default gives "5 feet, 6.9 inches".
 Click 1: the default today. Click 2: your own precision, Precision.integer() → "5 feet, 7 inches".
 Click 3: or any other precision you want (two decimals).
-Click 4: the fix is coming (ICU-23558; UTS #35 says to round the smallest unit of mixed units).
+Click 4: a small fix is coming: by default, the last unit of mixed units will be rounded to an integer
+(UTS #35 already says so).
 Until then, set the precision yourself. It always wins over the default.
 :::
 
@@ -972,7 +1255,7 @@ Until then, set the precision yourself. It always wins over the default.
 | en-US-u-ms-metric | 180 centimeters |
 
 ::: notes
-[15:00–16:45] All outputs are real ICU 79 (main) results, identical in ICU4J and ICU4C.
+[17:20–18:05] All outputs are real ICU 79 (main) results, identical in ICU4J and ICU4C.
 :::
 
 # Road distance: same code, different values
@@ -987,7 +1270,7 @@ Bonus, 30°C with usage `weather`:
 `en-US` → 86 degrees Fahrenheit · `en-US-u-mu-celsius` → 30 degrees Celsius
 
 ::: notes
-[16:45–18:30] Callback to the opening: 30°C, the beach day, is "86 degrees Fahrenheit" for a US user.
+[18:05–19:50] Callback to the opening: 30°C, the beach day, is "86 degrees Fahrenheit" for a US user.
 The -u-mu- keyword lets a user override the temperature unit.
 Skip if behind: the weather bonus.
 :::
@@ -997,11 +1280,59 @@ Skip if behind: the weather bonus.
 ## Grammatical gender and case in `MessageFormat` sentences
 
 ::: notes
-[18:30] Checkpoint. In real apps, units don't appear in isolation: they sit inside sentences
+[19:50] Checkpoint. In real apps, units don't appear in isolation: they sit inside sentences
 formatted with MessageFormat, where the sentence needs the unit's gender and case.
 :::
 
-# Grammatical gender changes the message
+# Gender vs. case
+
+Two different problems, in opposite directions:
+
+:::: {.columns .gram-cards}
+::: {.column .gram-card .gender .fragment}
+### 1 · Grammatical gender
+
+**The unit changes the sentence**
+
+1 mois offert · 1 semaine offert**e**
+
+ICU ➜ you: `getNounClass()`
+
+*Tutorial 2*
+:::
+
+::: {.column .gram-card .case .fragment}
+### 2 · Grammatical case
+
+**The sentence changes the unit**
+
+100 Kilometer · mit 100 Kilometer**n**
+
+You ➜ ICU: `DisplayOptions`
+
+*Tutorial 3*
+:::
+::::
+
+::: notes
+[19:50–20:35] Before the code, the big picture: two problems that look alike but go in opposite directions.
+Click 1, gender: the unit has a gender, and the rest of the sentence must agree with it.
+You read it from ICU (getNounClass), and the message picks the right words.
+Click 2, case: the sentence decides the case (here "mit" needs the dative), and the unit must change form.
+You tell ICU the case (DisplayOptions), and ICU inflects the unit.
+Terms: CLDR and ICU call these "grammatical gender" (ICU: noun class) and "grammatical case";
+changing the form of a word is "inflection".
+:::
+
+# Part 1 · Grammatical gender {.divider .gram-gender data-background-gradient="linear-gradient(135deg, #7c3aed 0%, #db2777 100%)"}
+
+## The unit changes the sentence ➜ ask ICU: `getNounClass()`
+
+::: notes
+[20:35] Part 1: gender.
+:::
+
+# Grammatical gender: the unit changes the sentence
 
 A French app offers a free trial: `{duration} offert` ("… free")
 
@@ -1015,7 +1346,7 @@ A French app offers a free trial: `{duration} offert` ("… free")
 **➜ The adjective agrees with the unit, so we need the unit's grammatical gender:** `getNounClass()`
 
 ::: notes
-[18:30–19:30] A free-trial banner: "1 mois offert" (1 month free) is fine, but the same message
+[20:35–21:20] A free-trial banner: "1 mois offert" (1 month free) is fine, but the same message
 with a week gives "1 semaine offert", which is wrong: semaine is feminine, so the adjective
 becomes "offerte". The message has to know the gender of the unit, and only ICU knows it
 (the unit can come from data or from the router).
@@ -1059,7 +1390,7 @@ String text = trial.format(Map.of("gender", gender, "duration", duration.toStrin
 ::::
 
 ::: notes
-[19:30–21:30] Click through:
+[21:20–22:50] Click through:
 6: format the duration with ICU ("1 semaine").
 7: ask the formatted number for its noun class: feminine.
 9–11: the message selects on the gender (select, not plural).
@@ -1080,13 +1411,21 @@ Real messages also need plural selection; kept to 1 here.
 The router picks the unit, so the `MessageFormat` sentence has to follow it.
 
 ::: notes
-[21:30–22:00] Skip if behind. Real ICU4C output.
+[22:50–23:05] Skip if behind. Real ICU4C output.
 With usage, the router picks the unit per value, so the gender can change with the value.
 Note: ICU4J currently returns UNDEFINED from getNounClass() whenever usage() is set
 (found while preparing this talk). Decide before the talk: fix, or mention it.
 :::
 
-# Grammatical case changes the unit
+# Part 2 · Grammatical case {.divider .gram-case data-background-gradient="linear-gradient(135deg, #0d9488 0%, #0369a1 100%)"}
+
+## The sentence changes the unit ➜ tell ICU: `DisplayOptions`
+
+::: notes
+[23:05] Part 2: case.
+:::
+
+# Grammatical case: the sentence changes the unit
 
 In German, the sentence decides the **case**, and the unit changes with it:
 
@@ -1100,7 +1439,7 @@ In German, the sentence decides the **case**, and the unit changes with it:
 **➜ The message knows the case; ICU inflects the unit:** `DisplayOptions` + `GrammaticalCase`
 
 ::: notes
-[22:00–23:00] "100 km/h are allowed" vs "he drives at 100 km/h".
+[23:05–24:05] "100 km/h are allowed" vs "he drives at 100 km/h".
 The preposition "mit" requires the dative, so "Kilometer" becomes "Kilometern".
 Only the first part of the compound unit changes ("pro Stunde" stays).
 Unlike gender, the case comes from the sentence, so the message passes it to ICU.
@@ -1117,7 +1456,7 @@ Unlike gender, the case comes from the sentence, so the message passes it to ICU
 | locative / prepositional | — | 3 metrach | 3 метрах |
 
 ::: notes
-[23:00–23:45] Skip if behind. Real ICU output. German has four cases, so instrumental and locative do not apply.
+[24:05–24:50] Skip if behind. Real ICU output. German has four cases, so instrumental and locative do not apply.
 Polish and Russian have more cases, so the unit has more forms.
 :::
 
@@ -1155,7 +1494,7 @@ String text = drives.format(Map.of("speed", speed));
 ::::
 
 ::: notes
-[23:45–26:30] Checkpoint. Click through:
+[24:50–27:50] Click through:
 4–6: ask for the dative, because the message says "mit {speed}".
 9: "100 Kilometern pro Stunde".
 11–12: the sentence: "Er fährt mit 100 Kilometern pro Stunde."
@@ -1168,7 +1507,7 @@ ICU4C: DisplayOptions::builder().setGrammaticalCase(UDISPOPT_GRAMMATICAL_CASE_DA
 ## Progress and what’s coming
 
 ::: notes
-[26:30] Checkpoint.
+[27:50] Checkpoint.
 :::
 
 # ICU4X today (experimental)
@@ -1179,7 +1518,7 @@ ICU4C: DisplayOptions::builder().setGrammaticalCase(UDISPOPT_GRAMMATICAL_CASE_DA
 - `duration`: duration formatter
 
 ::: notes
-[26:30–27:30] Confirm the current status of each item before the talk.
+[27:50–28:50] Confirm the current status of each item before the talk.
 :::
 
 # What’s coming
@@ -1193,7 +1532,7 @@ ICU4C: DisplayOptions::builder().setGrammaticalCase(UDISPOPT_GRAMMATICAL_CASE_DA
   - Usage-based unit preferences, mixed units, and grammatical case & gender
 
 ::: notes
-[27:30–29:30] Callback to slide 2: ECMAScript's Amount proposal keeps the number and unit together,
+[28:50–30:50] Callback to slide 2: ECMAScript's Amount proposal keeps the number and unit together,
 and Smart Unit Preferences brings CLDR usage-based routing and mixed units to JavaScript,
 backed by ICU4X.
 :::
@@ -1207,7 +1546,7 @@ backed by ICU4X.
 - Check the noun class so the rest of the sentence agrees
 
 ::: notes
-[29:30–30:30] Quick recap, one sentence per point.
+[30:50–31:50] Quick recap, one sentence per point.
 :::
 
 # Questions! {.cover data-background-gradient="linear-gradient(135deg, #312e81 0%, #6d28d9 55%, #db2777 100%)"}
@@ -1218,5 +1557,5 @@ backed by ICU4X.
 - Demo code: (QR code)
 
 ::: notes
-[30:30–40:00] Checkpoint. Questions; 40:00–45:00 is buffer.
+[31:50–40:00] Checkpoint. Questions; 40:00–45:00 is buffer.
 :::
