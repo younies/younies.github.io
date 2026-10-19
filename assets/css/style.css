@@ -5,22 +5,23 @@
 :root {
   color-scheme: light dark;
 
-  /* Selenized (github.com/jan-warchol/selenized), Solarized redesigned for
-   * more contrast: its "light" variant for the light theme and its "dark"
-   * variant for the dark theme. The names in comments are Selenized's. */
-  --bg: light-dark(#fbf3db, #103c48);          /* bg_0 */
-  --bg-soft: light-dark(#ece3cc, #184956);     /* bg_1 */
-  --text: light-dark(#3a4d53, #cad8d9);        /* fg_1 */
-  --muted: light-dark(#53676d, #adbcbc);       /* fg_0 */
-  --faint: light-dark(#6b7b7d, #95a8aa);       /* between dim_0 and fg_0, so small text stays readable */
-  --border: light-dark(#d5cdb6, #2d5b69);      /* bg_2 */
-  --accent: light-dark(#8762c6, #af88eb);      /* violet */
+  /* Flexoki (stephango.com/flexoki), an inky palette for prose and code:
+   * warm paper for the light theme and warm ink for the dark one. The names
+   * in comments are Flexoki's; accents are its 600 (light) and 400 (dark)
+   * shades. */
+  --bg: light-dark(#fffcf0, #100f0f);          /* paper / black */
+  --bg-soft: light-dark(#f2f0e5, #1c1b1a);     /* bg-2 */
+  --text: light-dark(#100f0f, #cecdc3);        /* tx */
+  --muted: light-dark(#6f6e69, #878580);       /* tx-2 */
+  --faint: light-dark(#878580, #6f6e69);       /* base-500 / base-600, darker than tx-3 so small text stays readable */
+  --border: light-dark(#e6e4d9, #282726);      /* ui */
+  --accent: light-dark(#5e409d, #8b7ec8);      /* purple */
   --accent-soft: color-mix(in srgb, var(--accent) 15%, var(--bg));
-  --link: light-dark(#0072d4, #58a3ff);        /* blue, br_blue */
-  --code-bg: light-dark(#ece3cc, #184956);     /* bg_1 */
-  --code-text: light-dark(#3a4d53, #cad8d9);   /* fg_1 */
-  --shadow: 0 1px 2px light-dark(rgb(58 77 83 / 6%), rgb(0 0 0 / 25%)),
-            0 10px 30px light-dark(rgb(58 77 83 / 8%), rgb(0 0 0 / 18%));
+  --link: light-dark(#205ea6, #4385be);        /* blue */
+  --code-bg: light-dark(#f2f0e5, #1c1b1a);     /* bg-2 */
+  --code-text: light-dark(#100f0f, #cecdc3);   /* tx */
+  --shadow: 0 1px 2px light-dark(rgb(16 15 15 / 5%), rgb(0 0 0 / 30%)),
+            0 10px 30px light-dark(rgb(16 15 15 / 6%), rgb(0 0 0 / 20%));
   /* The colors of the slide decks: indigo, violet, pink. */
   --gradient: linear-gradient(135deg, #4338ca 0%, #7c3aed 55%, #db2777 100%);
   --gradient-text: linear-gradient(135deg,
@@ -32,15 +33,15 @@
   --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   --radius: 14px;
 
-  /* Code colors: the Selenized accents. */
-  --tok-keyword: light-dark(#489100, #75b938);    /* green */
-  --tok-type: light-dark(#ad8900, #dbb32d);       /* yellow */
-  --tok-string: light-dark(#009c8f, #41c7b9);     /* cyan */
-  --tok-number: light-dark(#ca4898, #f275be);     /* magenta */
-  --tok-comment: light-dark(#909995, #72898f);    /* dim_0 */
-  --tok-function: light-dark(#0072d4, #4695f7);   /* blue */
-  --tok-attribute: light-dark(#c25d1e, #ed8649);  /* orange */
-  --tok-error: light-dark(#d2212d, #fa5750);      /* red */
+  /* Code colors: the Flexoki accents. */
+  --tok-keyword: light-dark(#66800b, #879a39);    /* green */
+  --tok-type: light-dark(#ad8301, #d0a215);       /* yellow */
+  --tok-string: light-dark(#24837b, #3aa99f);     /* cyan */
+  --tok-number: light-dark(#5e409d, #8b7ec8);     /* purple */
+  --tok-comment: light-dark(#878580, #6f6e69);    /* base-500 / base-600 */
+  --tok-function: light-dark(#bc5215, #da702c);   /* orange */
+  --tok-attribute: light-dark(#a02f6f, #ce5d97);  /* magenta */
+  --tok-error: light-dark(#af3029, #d14d41);      /* red */
 }
 
 :root[data-theme="light"] { color-scheme: light; }
