@@ -11,6 +11,9 @@ conversion and preferences, grammatical inflection, and number and currency
 formatting. I've also mentored Google Summer of Code contributors and organized
 Rust meetups hosted at Google.
 
+Outside work, I love cooking, playing the guitar, hiking, and exploring new
+cities.
+
 Here I share blog posts, the slides and code from my talks, and notes from
 meetups.
 
