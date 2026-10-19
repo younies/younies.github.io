@@ -18,6 +18,7 @@ GitHub Actions builds and publishes the site on every push to `main`.
 | [`talks/`](talks/) | One folder per talk, with its page, slides, and code | `/talks/` |
 | [`meetups/`](meetups/) | One folder per meetup | `/meetups/` |
 | [`projects/`](projects/) | Open-source work, mentoring, and community | `/projects/` |
+| [`utw/`](utw/) | Short links for the QR codes on the UTW 2026 slides: `/utw/` (talk page), `/utw/slides/`, and `/utw/code/` | `/utw/` |
 | [`404.md`](404.md) | The "Page not found" page | |
 | [`assets/`](assets/) | CSS, JavaScript, the icon, and images | `/assets/` |
 | [`site.toml`](site.toml) | Settings: title, address, menu, links, and sections | |
