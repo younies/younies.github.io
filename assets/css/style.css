@@ -5,19 +5,22 @@
 :root {
   color-scheme: light dark;
 
-  --bg: light-dark(#ffffff, #0d1117);
-  --bg-soft: light-dark(#f7f6fb, #151b25);
-  --text: light-dark(#1d2130, #e6e8ee);
-  --muted: light-dark(#596075, #a7adbb);
-  --faint: light-dark(#7d8396, #818899);
-  --border: light-dark(#e7e5ef, #262d3a);
-  --accent: light-dark(#6d28d9, #b49cff);
-  --accent-soft: light-dark(#f2edff, #211b36);
-  --link: light-dark(#5b21b6, #c4b5fd);
-  --code-bg: light-dark(#f6f8fa, #161b22);
-  --code-text: light-dark(#24292f, #e6edf3);
-  --shadow: 0 1px 2px light-dark(rgb(23 18 54 / 5%), rgb(0 0 0 / 30%)),
-            0 10px 30px light-dark(rgb(23 18 54 / 6%), rgb(0 0 0 / 20%));
+  /* Selenized (github.com/jan-warchol/selenized), Solarized redesigned for
+   * more contrast: its "light" variant for the light theme and its "dark"
+   * variant for the dark theme. The names in comments are Selenized's. */
+  --bg: light-dark(#fbf3db, #103c48);          /* bg_0 */
+  --bg-soft: light-dark(#ece3cc, #184956);     /* bg_1 */
+  --text: light-dark(#3a4d53, #cad8d9);        /* fg_1 */
+  --muted: light-dark(#53676d, #adbcbc);       /* fg_0 */
+  --faint: light-dark(#6b7b7d, #95a8aa);       /* between dim_0 and fg_0, so small text stays readable */
+  --border: light-dark(#d5cdb6, #2d5b69);      /* bg_2 */
+  --accent: light-dark(#8762c6, #af88eb);      /* violet */
+  --accent-soft: color-mix(in srgb, var(--accent) 15%, var(--bg));
+  --link: light-dark(#0072d4, #58a3ff);        /* blue, br_blue */
+  --code-bg: light-dark(#ece3cc, #184956);     /* bg_1 */
+  --code-text: light-dark(#3a4d53, #cad8d9);   /* fg_1 */
+  --shadow: 0 1px 2px light-dark(rgb(58 77 83 / 6%), rgb(0 0 0 / 25%)),
+            0 10px 30px light-dark(rgb(58 77 83 / 8%), rgb(0 0 0 / 18%));
   /* The colors of the slide decks: indigo, violet, pink. */
   --gradient: linear-gradient(135deg, #4338ca 0%, #7c3aed 55%, #db2777 100%);
   --gradient-text: linear-gradient(135deg,
@@ -29,15 +32,15 @@
   --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   --radius: 14px;
 
-  /* Code colors, close to GitHub's light and dark themes. */
-  --tok-keyword: light-dark(#cf222e, #ff7b72);
-  --tok-type: light-dark(#953800, #ffa657);
-  --tok-string: light-dark(#0a3069, #a5d6ff);
-  --tok-number: light-dark(#0550ae, #79c0ff);
-  --tok-comment: light-dark(#6e7781, #8b949e);
-  --tok-function: light-dark(#8250df, #d2a8ff);
-  --tok-attribute: light-dark(#116329, #7ee787);
-  --tok-error: light-dark(#cf222e, #ff7b72);
+  /* Code colors: the Selenized accents. */
+  --tok-keyword: light-dark(#489100, #75b938);    /* green */
+  --tok-type: light-dark(#ad8900, #dbb32d);       /* yellow */
+  --tok-string: light-dark(#009c8f, #41c7b9);     /* cyan */
+  --tok-number: light-dark(#ca4898, #f275be);     /* magenta */
+  --tok-comment: light-dark(#909995, #72898f);    /* dim_0 */
+  --tok-function: light-dark(#0072d4, #4695f7);   /* blue */
+  --tok-attribute: light-dark(#c25d1e, #ed8649);  /* orange */
+  --tok-error: light-dark(#d2212d, #fa5750);      /* red */
 }
 
 :root[data-theme="light"] { color-scheme: light; }
