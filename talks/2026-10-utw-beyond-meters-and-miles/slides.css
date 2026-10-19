@@ -1,0 +1,676 @@
+/* Modern, colorful theme for the UTW 2026 deck (reveal.js, built with pandoc).
+   It overrides reveal.js's white theme through its CSS variables. */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&family=JetBrains+Mono:wght@400;600&display=swap');
+
+:root {
+  --indigo: #4f46e5;
+  --violet: #7c3aed;
+  --pink: #db2777;
+  --emerald: #059669;
+  --slate-900: #0f172a;
+  --slate-700: #334155;
+  --slate-500: #64748b;
+  --tint: #eef2ff;
+
+  --r-background-color: #ffffff;
+  --r-main-font: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Noto Sans', sans-serif;
+  --r-main-font-size: 32px;
+  --r-main-color: var(--slate-700);
+  --r-heading-font: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --r-heading-color: var(--slate-900);
+  --r-heading-font-weight: 800;
+  --r-heading-letter-spacing: -0.02em;
+  --r-heading-text-transform: none;
+  --r-code-font: 'JetBrains Mono', 'Fira Code', ui-monospace, Menlo, Consolas, monospace;
+  --r-link-color: var(--indigo);
+  --r-link-color-hover: var(--violet);
+  --r-selection-background-color: #c7d2fe;
+}
+
+/* Soft color in the corners of every regular slide. */
+.reveal-viewport {
+  background:
+    radial-gradient(circle at 100% 0%, #e0e7ff 0, rgba(224, 231, 255, 0) 32%),
+    radial-gradient(circle at 0% 100%, #fce7f3 0, rgba(252, 231, 243, 0) 28%),
+    #ffffff;
+}
+
+/* Headings: gradient title with a short accent bar underneath. */
+.reveal h1 {
+  display: inline-block;
+  font-size: 1.6em;
+  background: linear-gradient(90deg, var(--indigo), var(--violet) 55%, var(--pink));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.reveal h1::after {
+  content: "";
+  display: block;
+  width: 72px;
+  height: 6px;
+  margin: 0.3em auto 0;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--indigo), var(--pink));
+}
+
+.reveal h1 code {
+  color: var(--indigo);
+  background: var(--tint);
+}
+
+.reveal h2 {
+  font-size: 1.05em;
+  font-weight: 600;
+  color: var(--slate-500);
+}
+
+/* Body text. */
+.reveal p,
+.reveal li {
+  line-height: 1.4;
+}
+
+.reveal strong {
+  color: var(--slate-900);
+  font-weight: 700;
+}
+
+.reveal ul li::marker,
+.reveal ol li::marker {
+  color: var(--violet);
+  font-weight: 700;
+}
+
+.reveal :not(pre) > code {
+  font-family: var(--r-code-font);
+  font-size: 0.85em;
+  color: #4338ca;
+  background: var(--tint);
+  padding: 0.08em 0.35em;
+  border-radius: 6px;
+}
+
+.reveal blockquote {
+  width: 75%;
+  padding: 0.5em 1em;
+  font-style: italic;
+  font-size: 1.15em;
+  color: var(--slate-900);
+  background: linear-gradient(90deg, #eef2ff, #fdf2f8);
+  border-left: 8px solid var(--violet);
+  border-radius: 14px;
+  box-shadow: none;
+}
+
+/* Code blocks: light, high-contrast cards that stay readable on a projector. */
+.reveal pre {
+  width: 100%;
+  font-size: 0.55em;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.1);
+  overflow: hidden;
+}
+
+/* The CLDR XML slides: larger code, and the bullets under it step with the
+   highlighted lines. */
+#person-height-in-cldr pre,
+#road-distance-in-cldr-thresholds-and-rounding pre {
+  font-size: 0.6em;
+}
+
+.reveal pre.xml code {
+  padding: 0.7em 0.7em;
+}
+
+/* A bullet list where each bullet is its own fragment (with an explicit
+   data-fragment-index, so it can follow the code steps). */
+.reveal .steps {
+  width: fit-content;
+  max-width: 100%;
+  margin: 0.2em auto 0;
+  text-align: left;
+}
+
+.reveal .steps ul {
+  display: block;
+  margin: 0 0 0 1em;
+}
+
+.reveal .steps li {
+  margin: 0.1em 0;
+}
+
+#what-do-we-need-to-format-a-unit p,
+#what-do-we-need-to-format-a-unit ul {
+  font-size: 0.88em;
+  margin: 0.35em 0;
+}
+
+.reveal pre code {
+  box-sizing: border-box;
+  max-height: 560px;
+  padding: 0.85em 1em;
+  font-family: var(--r-code-font);
+  border-radius: 14px;
+}
+
+.reveal pre code,
+.reveal pre code.hljs {
+  color: #1f2328;
+  background: #f8fafc;
+}
+
+/* Syntax colors (GitHub-light style, with stronger strings). */
+.reveal .hljs-comment,
+.reveal .hljs-quote {
+  color: #6e7781;
+  font-style: italic;
+}
+
+.reveal .hljs-keyword,
+.reveal .hljs-selector-tag {
+  color: #cf222e;
+  font-weight: 600;
+}
+
+.reveal .hljs-string {
+  color: #0a7a3c;
+  font-weight: 600;
+}
+
+.reveal .hljs-number,
+.reveal .hljs-literal,
+.reveal .hljs-attr,
+.reveal .hljs-meta {
+  color: #0550ae;
+}
+
+.reveal .hljs-title,
+.reveal .hljs-title.function_ {
+  color: #8250df;
+}
+
+.reveal .hljs-type,
+.reveal .hljs-title.class_,
+.reveal .hljs-built_in,
+.reveal .hljs-name {
+  color: #953800;
+}
+
+.reveal .hljs-tag {
+  color: #116329;
+}
+
+/* Line-by-line steps: dim the other lines and mark the current ones. */
+.reveal .hljs-ln-numbers {
+  padding-right: 0.9em;
+  color: #94a3b8;
+}
+
+.reveal .hljs-ln-code {
+  padding-left: 0.4em;
+}
+
+.reveal code.language-xml .hljs-ln-numbers {
+  display: none;
+}
+
+.reveal code.language-xml .hljs-ln-code {
+  padding-left: 0;
+}
+
+/* The line-step plugin puts each XML line in a table row: keep the code font
+   size, and don't style it like the data tables (cards, striped rows). */
+.reveal code.language-xml table.hljs-ln {
+  font-size: inherit;
+  border-radius: 0;
+  box-shadow: none;
+  overflow: visible;
+}
+
+.reveal code.language-xml table.hljs-ln td {
+  background: transparent;
+}
+
+.reveal .hljs.has-highlights tr:not(.highlight-line) {
+  opacity: 0.3;
+}
+
+.reveal .hljs.has-highlights tr.highlight-line td {
+  background: #fef3c7;
+}
+
+.reveal .hljs.has-highlights tr.highlight-line .hljs-ln-numbers {
+  color: #b45309;
+  font-weight: 700;
+}
+
+/* Tutorial code: a window card with a title bar, larger code, and an output
+   panel underneath. */
+.reveal .code-window {
+  width: 100%;
+  margin: 0.3em auto 0;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #ffffff;
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.14);
+}
+
+.reveal .code-window::before {
+  content: attr(data-label);
+  display: block;
+  padding: 0.45em 1em 0.45em 76px;
+  font-family: var(--r-main-font);
+  font-size: 0.42em;
+  font-weight: 600;
+  text-align: left;
+  color: var(--slate-500);
+  background:
+    radial-gradient(circle, #f87171 5px, transparent 5.5px) 12px 50% / 14px 14px no-repeat,
+    radial-gradient(circle, #fbbf24 5px, transparent 5.5px) 32px 50% / 14px 14px no-repeat,
+    radial-gradient(circle, #34d399 5px, transparent 5.5px) 52px 50% / 14px 14px no-repeat,
+    linear-gradient(#f8fafc, #eef2f7);
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.reveal .code-window pre {
+  margin: 0;
+  font-size: 0.66em;
+  line-height: 1.3;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.reveal .code-window pre code,
+.reveal .code-window pre code.hljs {
+  padding: 0.7em 1em;
+  border-radius: 0;
+  background: #ffffff;
+}
+
+.reveal .code-output {
+  box-sizing: border-box;
+  width: 100%;
+  margin: 0.45em auto 0;
+  padding: 0.5em 1em;
+  font-size: 0.55em;
+  text-align: left;
+  border-radius: 14px;
+  background: var(--slate-900);
+}
+
+.reveal .code-output::before {
+  content: "OUTPUT";
+  display: block;
+  margin-bottom: 0.2em;
+  font-size: 0.7em;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: #64748b;
+}
+
+.reveal .code-output p {
+  margin: 0;
+  padding: 0.12em 0;
+}
+
+.reveal .code-output .out-label {
+  display: inline-block;
+  min-width: 11em;
+  font-family: var(--r-code-font);
+  color: #94a3b8;
+}
+
+.reveal .code-output .out-value {
+  font-weight: 700;
+  color: #6ee7b7;
+}
+
+/* A wrong or surprising result in the output panel. */
+.reveal .code-output .out-value.out-bad {
+  color: #fca5a5;
+}
+
+/* A short emphasized note between the code and its output. */
+.reveal .key-callout {
+  box-sizing: border-box;
+  width: 100%;
+  margin: 0.4em auto 0;
+  padding: 0.35em 0.8em;
+  font-size: 0.55em;
+  text-align: left;
+  color: var(--slate-900);
+  background: #fef3c7;
+  border-left: 6px solid #f59e0b;
+  border-radius: 10px;
+}
+
+.reveal .key-callout p {
+  margin: 0;
+}
+
+/* Tables: rounded cards with a gradient header and striped rows. */
+.reveal table {
+  font-size: 0.68em;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(79, 70, 229, 0.12);
+}
+
+.reveal table th {
+  background: linear-gradient(90deg, var(--indigo), var(--violet));
+  color: #ffffff;
+  font-weight: 600;
+  border: none;
+  padding: 0.5em 1em;
+}
+
+.reveal table td {
+  border: none;
+  padding: 0.45em 1em;
+  background: #ffffff;
+}
+
+.reveal table tbody tr:nth-child(even) td {
+  background: #f5f7ff;
+}
+
+/* Cover, section dividers, and the closing slide sit on gradient backgrounds
+   (set per slide in slides.md), so their text is white. */
+.reveal section.divider h1,
+.reveal section.cover h1 {
+  display: block;
+  background: none;
+  color: #ffffff;
+  font-size: 2.4em;
+  text-shadow: 0 6px 24px rgba(0, 0, 0, 0.25);
+}
+
+.reveal section.cover h1 {
+  font-size: 2.2em;
+}
+
+.reveal section.divider h1::after,
+.reveal section.cover h1::after {
+  background: rgba(255, 255, 255, 0.85);
+}
+
+.reveal section.divider h2,
+.reveal section.cover h2,
+.reveal section.cover p,
+.reveal section.cover li,
+.reveal section.cover strong {
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.reveal section.cover a {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+/* "How tall are you?": a chat between Alex (left) and Sam (right), with Sam's
+   thoughts in italics. */
+.reveal .chat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3em;
+  width: 80%;
+  margin: 0 auto;
+  font-size: 0.62em;
+}
+
+.reveal .chat .msg,
+.reveal .chat .thought {
+  max-width: 72%;
+  text-align: left;
+}
+
+.reveal .chat .msg {
+  padding: 0.35em 0.85em;
+  border-radius: 18px;
+  line-height: 1.3;
+}
+
+.reveal .chat p {
+  margin: 0;
+}
+
+/* Who is who: Alex asks (left), Sam answers (right). */
+.reveal .chat .chat-names p {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85em;
+  font-weight: 700;
+  color: var(--slate-500);
+}
+
+.reveal .chat .alex {
+  align-self: flex-start;
+  background: #eef2ff;
+  color: var(--slate-900);
+  border-bottom-left-radius: 4px;
+}
+
+.reveal .chat .sam {
+  align-self: flex-end;
+  background: linear-gradient(135deg, var(--indigo), var(--violet));
+  color: #ffffff;
+  font-weight: 600;
+  border-bottom-right-radius: 4px;
+}
+
+.reveal .chat .sam.correct {
+  background: linear-gradient(135deg, #059669, #10b981);
+}
+
+.reveal .chat .thought {
+  align-self: flex-end;
+  padding: 0 0.6em;
+  color: var(--slate-500);
+  font-style: italic;
+  font-size: 0.9em;
+}
+
+/* A round is one answer from Sam, Alex's reaction, and Sam's thought. Once the
+   next round starts, keep only the crossed-out answer of the earlier rounds,
+   so a long chat still fits on the slide. Stepping back brings them back. */
+.reveal .chat .round {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3em;
+}
+
+.reveal .chat .round:has(~ .round > .fragment.visible) > :not(.sam) {
+  display: none;
+}
+
+/* Cross out a wrong answer once the next step appears. If the PDF is printed
+   with every step on one page, all wrong answers are crossed out. */
+.reveal .fragment.visible:not(.current-fragment) .wrong {
+  text-decoration: line-through;
+  text-decoration-color: #ef4444;
+  text-decoration-thickness: 3px;
+  opacity: 0.5;
+}
+
+/* "Every unit hangs from a base unit": an SVG tree of base units with the
+   other units and their factors hanging from it. */
+.reveal svg.unit-tree {
+  display: block;
+  width: 92%;
+  height: auto;
+  margin: 0 auto;
+}
+
+.reveal svg.unit-tree text {
+  font-family: var(--r-main-font);
+  text-anchor: middle;
+}
+
+.reveal svg.unit-tree .tree-label {
+  text-anchor: start;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  fill: var(--slate-500);
+}
+
+.reveal svg.unit-tree .tree-quantity {
+  font-size: 16px;
+  font-style: italic;
+  fill: var(--slate-500);
+}
+
+.reveal svg.unit-tree .tree-base text {
+  font-size: 26px;
+  font-weight: 800;
+  fill: #ffffff;
+}
+
+.reveal svg.unit-tree .tree-leaf rect {
+  fill: #ffffff;
+  stroke: #c7d2fe;
+  stroke-width: 2;
+}
+
+.reveal svg.unit-tree .tree-leaf .name {
+  font-size: 20px;
+  font-weight: 700;
+  fill: var(--slate-900);
+}
+
+.reveal svg.unit-tree .tree-leaf .rate {
+  font-family: var(--r-code-font);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.reveal svg.unit-tree .rate.meter { fill: #4f46e5; }
+.reveal svg.unit-tree .rate.kilogram { fill: #059669; }
+.reveal svg.unit-tree .rate.kelvin { fill: #ea580c; }
+
+/* The conversion rate written on an arrow (the arrow runs behind the tag). */
+.reveal svg.unit-tree .rate-tag rect {
+  fill: #ffffff;
+  stroke: #e2e8f0;
+  stroke-width: 1.5;
+}
+
+.reveal svg.unit-tree .rate-tag .rate {
+  font-family: var(--r-code-font);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+/* "CLDR picked the unit. Now convert!": every pair of units needs a rate. */
+.reveal svg.pairs .tree-leaf .name {
+  font-size: 16px;
+}
+
+.reveal svg.pairs .pairs-mesh {
+  fill: none;
+  stroke: #fda4af;
+  stroke-width: 2;
+}
+
+.reveal svg.pairs .pairs-example {
+  stroke: #4f46e5;
+  stroke-width: 4;
+  stroke-linecap: round;
+  marker-end: url(#pairs-arrow);
+}
+
+.reveal svg.pairs .pairs-row,
+.reveal svg.pairs .pairs-count,
+.reveal svg.pairs .pairs-total {
+  text-anchor: start;
+}
+
+.reveal svg.pairs .pairs-row {
+  font-size: 24px;
+  fill: var(--slate-900);
+}
+
+.reveal svg.pairs .pairs-count {
+  font-size: 26px;
+  font-weight: 800;
+  fill: #db2777;
+}
+
+.reveal svg.pairs .pairs-total {
+  font-size: 22px;
+  font-weight: 700;
+  fill: var(--slate-700);
+}
+
+.reveal svg.unit-tree .tree-cross {
+  font-size: 24px;
+  font-weight: 800;
+  fill: #ffffff;
+}
+
+/* Compound units slide. */
+.reveal svg.unit-tree .tree-compound text {
+  font-size: 22px;
+  font-weight: 800;
+  fill: #ffffff;
+}
+
+.reveal svg.unit-tree .tree-leaf rect.compound {
+  stroke: #7c3aed;
+  stroke-width: 3;
+}
+
+.reveal svg.unit-tree .tree-op {
+  font-family: var(--r-code-font);
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.reveal svg.unit-tree .tree-op.meter { fill: #4f46e5; }
+.reveal svg.unit-tree .tree-op.kilogram { fill: #059669; }
+
+.reveal svg.unit-tree .tree-sum {
+  font-size: 21px;
+  fill: var(--slate-900);
+}
+
+.reveal svg.unit-tree .tree-sum .result {
+  font-weight: 800;
+  fill: #db2777;
+}
+
+.reveal .tree-steps {
+  font-size: 0.62em;
+  text-align: left;
+  width: 92%;
+  margin: 0.4em auto 0;
+}
+
+.reveal .tree-steps p {
+  margin: 0.2em 0;
+}
+
+/* Slide number and progress bar. */
+.reveal .slide-number {
+  background: transparent;
+  color: var(--slate-500);
+  font-family: var(--r-main-font);
+  font-size: 14px;
+}
+
+.reveal .progress {
+  height: 5px;
+}
+
+.reveal .progress span {
+  background: linear-gradient(90deg, var(--indigo), var(--pink));
+}

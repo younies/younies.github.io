@@ -9,6 +9,8 @@ slides-offline.html
 # Compiled demo programs
 *.class
 *.o
+units_demo
+units_test
 
 # Editor, OS, and Python files
 .DS_Store

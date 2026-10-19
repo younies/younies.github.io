@@ -32,7 +32,22 @@ naturally for every user. You will learn how to:
 - Retrieve a unit’s grammatical gender, so you can make surrounding words, such
   as articles and adjectives, agree with it
 
+## Outline
+
+1. What do we need to format a unit?
+2. CLDR: unit preferences and conversion data
+3. ICU: convert, cascade, round, and route
+4. Tutorial 1: person height and road distance (ICU4J and ICU4C)
+5. Grammar: gender (Tutorial 2) and case (Tutorial 3) in `MessageFormat`
+6. ICU4X & ECMAScript: `Amount`, Smart Unit Preferences, and what’s coming
+
 ## Slides and code
 
-Coming soon: the slides, and the ICU4J and ICU4C code behind every example on
-them.
+The slides are at the top of this page. Click them, then use the arrow keys to
+step through; press `F` for full screen and `S` for the speaker notes. You can
+also [open the slides on their own](slides.html).
+
+Every output on the slides, from the chat bubbles to the tables, comes from the
+ICU4J and ICU4C test programs in
+[`demos/`](https://github.com/younies/younies.github.io/tree/HEAD/talks/2026-10-utw-beyond-meters-and-miles/demos).
+The [README](README.md) explains how to build the slides and run the tests.
