@@ -308,6 +308,10 @@ def build(drafts: bool = False) -> Site:
         target = staging / page.out
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_text(render_page(page, site), encoding="utf-8")
+    for page in pages:
+        _, image = share_image(page, config)
+        if image and not (staging / image).is_file():
+            raise BuildError(f"{page.src}: the preview image {image} is not part of the site")
     for name, section in config["sections"].items():
         if section.get("feed"):
             write_feed(name, site, staging)
@@ -352,6 +356,8 @@ def render_page(page: Page, site: Site) -> str:
     if page.meta.get("toc") is True and page.toc:
         parts.append(f'<nav class="toc" aria-labelledby="toc-title"><h2 id="toc-title">Contents</h2>{page.toc}</nav>')
     parts.append(f'<div class="prose">\n{body}\n</div>')
+    if page.section:
+        parts.append(render_share(page, site))
 
     lang, direction = page.text("lang"), page.text("dir")
     article = ' class="page"' + (f' lang="{attr(lang)}"' if lang else "") + (f' dir="{attr(direction)}"' if direction else "")
@@ -364,6 +370,7 @@ def render_page(page: Page, site: Site) -> str:
         "og_type": "article" if page.section else "website",
         "description": attr(plain(page.text("description")) or config["description"]),
         "canonical": attr(config["url"] + page.url),
+        "social": render_share_meta(page, site),
         "site_title": attr(config["title"]),
         "author": attr(config["author"]["name"]),
         "initials": attr(config["author"].get("initials", "")),
@@ -376,6 +383,66 @@ def render_page(page: Page, site: Site) -> str:
         "year": str(dt.date.today().year),
     }
     return re.sub(r"\{\{\s*(\w+)\s*\}\}", lambda match: values[match.group(1)], site.layout)
+
+
+def share_image(page: Page, config: dict) -> tuple[str, str | None]:
+    """The image for link previews (LinkedIn, chat apps) of a page.
+
+    Front matter `image` is relative to the page's folder, or to the site root
+    when it starts with "/"; pages without one use `image` in site.toml.
+    Returns the image's address and its path in the site (None for another
+    site's image), or ("", None) when there is no image.
+    """
+    value = page.url_field("image")
+    if value and re.match(r"[a-zA-Z][a-zA-Z0-9+.-]*:", value):
+        return value, None
+    if value:
+        path = value[1:] if value.startswith("/") else posixpath.normpath(posixpath.join(page.folder, value))
+    elif config.get("image"):
+        path = config["image"]
+    else:
+        return "", None
+    return config["url"] + path, path
+
+
+def png_size(path: Path) -> tuple[int, int] | None:
+    """Width and height of a PNG file, read from its header."""
+    with open(path, "rb") as f:
+        head = f.read(24)
+    if head[:8] != b"\x89PNG\r\n\x1a\n":
+        return None
+    return int.from_bytes(head[16:20], "big"), int.from_bytes(head[20:24], "big")
+
+
+def render_share_meta(page: Page, site: Site) -> str:
+    """Open Graph and Twitter tags beyond the basics, for link previews."""
+    url, path = share_image(page, site.config)
+    lines = []
+    if url:
+        lines.append(f'<meta property="og:image" content="{attr(url)}">')
+        size = png_size(ROOT / path) if path and (ROOT / path).is_file() else None
+        if size:
+            lines.append(f'<meta property="og:image:width" content="{size[0]}">')
+            lines.append(f'<meta property="og:image:height" content="{size[1]}">')
+        alt = plain(page.text("image_alt")) or plain(page.text("title"))
+        lines.append(f'<meta property="og:image:alt" content="{attr(alt)}">')
+        lines.append('<meta name="twitter:card" content="summary_large_image">')
+    if page.section and page.date and not page.text("event"):
+        lines.append(f'<meta property="article:published_time" content="{page.date.isoformat()}">')
+    return "\n".join(lines)
+
+
+def render_share(page: Page, site: Site) -> str:
+    """Share links at the end of a post, talk, or meetup page."""
+    url = site.config["url"] + page.url
+    linkedin = "https://www.linkedin.com/sharing/share-offsite/?url=" + urllib.parse.quote(url, safe="")
+    return (
+        '<footer class="share">\n'
+        '<span class="share-label">Share</span>\n'
+        f'<a href="{attr(linkedin)}" target="_blank" rel="noopener">{ICONS["linkedin"]}<span>LinkedIn</span></a>\n'
+        f'<button class="copy-link" type="button" data-url="{attr(url)}">{ICONS["link"]}<span>Copy link</span></button>\n'
+        "</footer>"
+    )
 
 
 def render_hero(root: str, site: Site) -> str:

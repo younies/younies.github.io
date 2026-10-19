@@ -539,6 +539,48 @@ a { color: var(--link); }
 
 .prose .empty { color: var(--faint); font-style: italic; }
 
+/* Share links at the end of posts, talks, and meetups. */
+.prose:has(+ .share) { padding-bottom: 1.75rem; }
+
+.share {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .5rem;
+  margin-bottom: 3.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border);
+}
+
+.share-label {
+  margin-inline-end: .25rem;
+  color: var(--faint);
+  font-size: .8rem;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.share a,
+.share button {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  padding: .3rem .85rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: none;
+  color: var(--text);
+  font: inherit;
+  font-size: .88rem;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+}
+.share a:hover,
+.share button:hover { border-color: var(--accent); color: var(--accent); }
+.share svg { width: .95rem; height: .95rem; }
+
 @media (max-width: 560px) {
   .prose li.entry { grid-template-columns: 1fr; }
   .entry-date { flex-direction: row; align-items: center; }

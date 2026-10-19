@@ -37,6 +37,20 @@
   }
 }
 
+// The "Copy link" button at the end of posts and talks copies the page address.
+for (const button of document.querySelectorAll('.copy-link')) {
+  const label = button.querySelector('span');
+  button.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(button.dataset.url);
+      label.textContent = 'Copied';
+    } catch {
+      label.textContent = button.dataset.url;
+    }
+    setTimeout(() => { label.textContent = 'Copy link'; }, 2000);
+  });
+}
+
 // Adds the language name and a Copy button to each code block.
 for (const pre of document.querySelectorAll('.prose pre')) {
   const block = pre.parentElement.matches('div.sourceCode') ? pre.parentElement : pre;

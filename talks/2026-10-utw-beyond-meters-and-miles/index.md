@@ -9,6 +9,7 @@ location: Nancy, France
 format: Tutorial
 description: How Unicode CLDR and ICU choose, convert, round, and inflect measurement units so they read naturally for every user.
 tags: [cldr, icu, units]
+image: card.png
 ---
 
 ## Abstract

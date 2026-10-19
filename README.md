@@ -133,6 +133,12 @@ which the feed, the sitemap, and the 404 page use.
 - Add `toc: true` to the front matter for a table of contents.
 - Any page can list a section with `<!-- list:blog -->` or
   `<!-- list:talks limit=3 -->`. Sections are set in `site.toml`.
+- When a page is shared on LinkedIn or in a chat app, the preview shows its
+  title, its `description`, and a picture: `assets/img/card.png` by default
+  (`image` in `site.toml`). A page can set its own with `image: card.png`
+  (relative to the page's folder, or to the site root when it starts with
+  `/`) and `image_alt:`. Use a 1200 × 630 PNG. Posts, talks, and meetups end
+  with "Share on LinkedIn" and "Copy link" buttons.
 
 ---
 
