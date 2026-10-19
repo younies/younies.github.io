@@ -813,6 +813,45 @@
   fill: #059669;
 }
 
+/* "Step 2": convert to the biggest unit, keep the integer, carry the rest. */
+.reveal svg.cascade .cascade-title {
+  text-anchor: start;
+  font-size: 17px;
+  font-weight: 700;
+  fill: var(--slate-700);
+}
+
+.reveal svg.cascade .tree-leaf rect.part {
+  stroke: #059669;
+  stroke-width: 3;
+}
+
+.reveal svg.cascade .cascade-rest {
+  text-anchor: start;
+}
+
+.reveal svg.cascade .cascade-join {
+  fill: none;
+  stroke: #cbd5e1;
+  stroke-width: 2.5;
+}
+
+.reveal svg.cascade .cascade-result rect {
+  fill: #059669;
+}
+
+.reveal svg.cascade .cascade-result text {
+  font-size: 17px;
+  font-weight: 700;
+  fill: #ffffff;
+}
+
+.reveal svg.cascade .cascade-caption {
+  font-size: 13px;
+  font-style: italic;
+  fill: var(--slate-500);
+}
+
 /* "Step 4: the first match wins": the router, row by row. */
 .reveal svg.router .router-edge text {
   font-size: 14px;

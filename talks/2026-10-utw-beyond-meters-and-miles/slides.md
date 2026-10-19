@@ -23,10 +23,10 @@ mostly on measurement units, grammatical inflection, and number formatting.
 In the next half hour, we'll see why formatting a measurement is much more than
 translating a label, and how CLDR and ICU do the hard work for you.
 
-Time plan (45-minute slot): about 32½ minutes of content, then 7½ minutes of
+Time plan (45-minute slot): about 33 minutes of content, then 7 minutes of
 questions and 5 minutes of buffer.
-Checkpoints: slide 7 at 5:00 · slide 17 at 10:25 · slide 24 at 14:30 ·
-slide 31 at 20:30 · slide 41 at 28:30 · slide 45 at 32:30.
+Checkpoints: slide 7 at 5:00 · slide 17 at 10:25 · slide 24 at 14:50 ·
+slide 31 at 20:50 · slide 41 at 28:50 · slide 45 at 32:50.
 Skip if behind: the second walkthrough (slide 12), the ICU4C walkthrough (slide 27),
 the weather bonus (slide 30), the runtime-gender slide (slide 36), and the cases table (slide 39).
 :::
@@ -1020,21 +1020,54 @@ All values are real ICU output (the fuel example uses usage "vehicle-fuel").
 
 # Step 2: Cascading convert
 
-1.8 m = 5.9055 ft → **5 ft** + 0.9055 ft = **10.8661 in**
+Convert to the biggest unit, keep the integer, carry the rest:
 
-Mixed units depend on the region:
-
-| Locale | Output | Unit |
-|---|---|---|
-| en-US | 5 feet, 11 inches | foot-and-inch |
-| fr-FR | 1 mètre et 80 centimètres | meter-and-centimeter |
-| ar-EG | متر و٨٠ سنتيمتر | meter-and-centimeter |
+```{=html}
+<svg class="unit-tree carry cascade" viewBox="0 0 960 400" role="img" aria-label="Two cascades. 1.8 meters is 5.9055 feet: keep 5 feet; the rest, 0.9055 feet, times 12 is 10.8661 inches; en-US shows 5 feet, 11 inches. 6 feet is 1.8288 meters: keep 1 meter; the rest, 0.8288 meters, times 100 is 82.88 centimeters; fr-FR shows 1 mètre et 83 centimètres.">
+  <defs>
+    <marker id="cascade-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#94a3b8"/></marker>
+  </defs>
+  <text class="cascade-title" x="10" y="24">en-US · 1.8 m → foot-and-inch</text><g class="tree-leaf"><rect x="10" y="40" width="110" height="52" rx="14"/><text class="name" x="65" y="74">1.8 m</text></g>
+  <g class="fragment" data-fragment-index="0">
+    <line x1="128" y1="66" x2="232" y2="66" stroke="#94a3b8" stroke-width="3" marker-end="url(#cascade-arrow)"/><text class="carry-op" x="180" y="56">÷ 0.3048</text><g class="tree-leaf"><rect x="240" y="40" width="150" height="52" rx="14"/><text class="name" x="315" y="74">5.9055 ft</text></g>
+  </g>
+  <g class="fragment" data-fragment-index="1">
+    <line x1="398" y1="66" x2="482" y2="66" stroke="#94a3b8" stroke-width="3" marker-end="url(#cascade-arrow)"/><text class="carry-op" x="440" y="56">keep</text><g class="tree-leaf"><rect class="part" x="490" y="40" width="100" height="52" rx="14"/><text class="name" x="540" y="74">5 ft</text></g>
+    <line x1="315" y1="92" x2="315" y2="116" stroke="#94a3b8" stroke-width="3" marker-end="url(#cascade-arrow)"/>
+    <text class="carry-op cascade-rest" x="327" y="110">the rest</text>
+    <g class="tree-leaf"><rect x="240" y="120" width="150" height="52" rx="14"/><text class="name" x="315" y="154">0.9055 ft</text></g>
+  </g>
+  <g class="fragment" data-fragment-index="2">
+    <line x1="398" y1="146" x2="482" y2="146" stroke="#94a3b8" stroke-width="3" marker-end="url(#cascade-arrow)"/><text class="carry-op" x="440" y="136">× 12</text><g class="tree-leaf"><rect class="part" x="490" y="120" width="150" height="52" rx="14"/><text class="name" x="565" y="154">10.8661 in</text></g>
+    <path class="cascade-join" d="M590 66 L676 106 M640 146 L676 106"/>
+    <g class="cascade-result"><rect x="680" y="84" width="275" height="44" rx="22"/><text x="817" y="113">5 feet, 11 inches</text></g>
+    <text class="cascade-caption" x="817" y="146">after rounding (Step 3)</text>
+  </g>
+  
+  <g class="fragment" data-fragment-index="3"><text class="cascade-title" x="10" y="234">fr-FR · 6 ft → meter-and-centimeter</text><g class="tree-leaf"><rect x="10" y="250" width="110" height="52" rx="14"/><text class="name" x="65" y="284">6 ft</text></g>
+    <line x1="128" y1="276" x2="232" y2="276" stroke="#94a3b8" stroke-width="3" marker-end="url(#cascade-arrow)"/><text class="carry-op" x="180" y="266">× 0.3048</text><g class="tree-leaf"><rect x="240" y="250" width="150" height="52" rx="14"/><text class="name" x="315" y="284">1.8288 m</text></g>
+  </g>
+  <g class="fragment" data-fragment-index="4">
+    <line x1="398" y1="276" x2="482" y2="276" stroke="#94a3b8" stroke-width="3" marker-end="url(#cascade-arrow)"/><text class="carry-op" x="440" y="266">keep</text><g class="tree-leaf"><rect class="part" x="490" y="250" width="100" height="52" rx="14"/><text class="name" x="540" y="284">1 m</text></g>
+    <line x1="315" y1="302" x2="315" y2="326" stroke="#94a3b8" stroke-width="3" marker-end="url(#cascade-arrow)"/>
+    <text class="carry-op cascade-rest" x="327" y="320">the rest</text>
+    <g class="tree-leaf"><rect x="240" y="330" width="150" height="52" rx="14"/><text class="name" x="315" y="364">0.8288 m</text></g>
+  </g>
+  <g class="fragment" data-fragment-index="5">
+    <line x1="398" y1="356" x2="482" y2="356" stroke="#94a3b8" stroke-width="3" marker-end="url(#cascade-arrow)"/><text class="carry-op" x="440" y="346">× 100</text><g class="tree-leaf"><rect class="part" x="490" y="330" width="150" height="52" rx="14"/><text class="name" x="565" y="364">82.88 cm</text></g>
+    <path class="cascade-join" d="M590 276 L676 316 M640 356 L676 316"/>
+    <g class="cascade-result"><rect x="680" y="294" width="275" height="44" rx="22"/><text x="817" y="323">1 mètre et 83 centimètres</text></g>
+    <text class="cascade-caption" x="817" y="356">after rounding (Step 3)</text>
+  </g>
+</svg>
+```
 
 ::: notes
-[11:10–11:40] 10.8661 inches rounds to 11 inches (Step 3 shows what happens when rounding overflows).
-French puts a no-break space (U+00A0) between the number and the unit.
-Arabic drops the numeral for "one": متر alone means "one meter".
-It also uses Arabic-Indic digits (٨٠).
+[11:10–12:00] A cascade of single converts, one step per click.
+Clicks 1–3, en-US: 1.8 m → foot, the biggest unit: 5.9055 ft. Keep 5 ft; the rest is 0.9055 ft.
+Carry the rest to the next unit: × 12 = 10.8661 in. After rounding (Step 3): "5 feet, 11 inches".
+Clicks 4–6, fr-FR, the other way: 6 ft → 1.8288 m. Keep 1 m; the rest, 0.8288 m × 100 = 82.88 cm:
+"1 mètre et 83 centimètres". French puts a no-break space (U+00A0) between the number and the unit.
 :::
 
 # Step 3: Round through the cascade
@@ -1085,7 +1118,7 @@ ICU rounds the smallest unit, then carries the overflow back up the cascade (inc
 :::
 
 ::: notes
-[11:40–12:50] Click 1: round the inches (11.89 → 12). Click 2: the naive result, 5 feet, 12 inches.
+[12:00–13:10] Click 1: round the inches (11.89 → 12). Click 2: the naive result, 5 feet, 12 inches.
 Click 3: 12 inches is 1 foot, so carry it back up: 6 feet, 0 inches. Click 4: the rule.
 Without a CLDR skeleton, the default rounding of the smallest unit is about to change:
 we will see it in Tutorial 1 with 1.7 m. Callers can always set their own `.precision(...)`.
@@ -1104,7 +1137,7 @@ we will see it in Tutorial 1 with 1.7 m. Callers can always set their own `.prec
 Same values in `en-GB`: 150 yards · 0.56 miles · 75 miles
 
 ::: notes
-[12:50–13:50] Real ICU output. The router uses the converter to check each CLDR preference
+[13:10–14:10] Real ICU output. The router uses the converter to check each CLDR preference
 row in order and picks the first one whose threshold the value meets (next slide: step by step).
 The UK uses yards for short road distances.
 :::
@@ -1157,7 +1190,7 @@ The UK uses yards for short road distances.
 ```
 
 ::: notes
-[13:50–14:30] The router at work, one value at a time; it checks the rows from the top, and the first match wins.
+[14:10–14:50] The router at work, one value at a time; it checks the rows from the top, and the first match wins.
 Clicks 1–2, 150 m: 0.09 mi is less than 0.5 mi, so go down; 492 ft is at least 100 ft: foot, rounded to 50 → "500 feet".
 Click 3, 900 m: 0.56 mi is at least 0.5 mi → mile → "0.56 miles".
 Click 4, 120 km: 74.56 mi → mile → "75 miles".
@@ -1169,7 +1202,7 @@ To compare a value with a threshold, the router converts it into that row's unit
 ## Person height and road distance (ICU4J and ICU4C)
 
 ::: notes
-[14:30] Checkpoint.
+[14:50] Checkpoint.
 :::
 
 # ICU4J
@@ -1203,7 +1236,7 @@ MeasureUnit unit = result.getOutputUnit();
 ::::
 
 ::: notes
-[14:30–15:45] Click through the highlighted lines:
+[14:50–16:05] Click through the highlighted lines:
 1–5: one formatter, built once and reused.
 2: the input unit, what we measured.
 3: the width (full unit names here).
@@ -1244,7 +1277,7 @@ Same locale, same value: without the usage, ICU formats the unit you gave it, wi
 :::
 
 ::: notes
-[15:45–16:15] Click 1: the usage line is gone. Click 2: "1.8 meters", even for en-US.
+[16:05–16:35] Click 1: the usage line is gone. Click 2: "1.8 meters", even for en-US.
 Click 3: compare with the previous slide. The locale alone never converts units:
 you have to tell ICU what the value is for.
 If asked: in ICU4J, getOutputUnit() returns null when no usage is set.
@@ -1279,7 +1312,7 @@ const char* id = unit.getIdentifier();
 ::::
 
 ::: notes
-[16:15–17:00] Click: the formatter (same inputs as Java, plus UErrorCode), then format, then the output unit.
+[16:35–17:20] Click: the formatter (same inputs as Java, plus UErrorCode), then format, then the output unit.
 Test: demos/cpp/units_test.cpp
 Skip if behind: say the C++ API mirrors the Java one and move on.
 Keep the MeasureUnit in a variable: getIdentifier() points into the object.
@@ -1321,7 +1354,7 @@ String twoDecimals = formatter
 :::
 
 ::: notes
-[17:00–18:00] Why did we use 1.8 m? Because with 1.7 m, today's default gives "5 feet, 6.9 inches".
+[17:20–18:20] Why did we use 1.8 m? Because with 1.7 m, today's default gives "5 feet, 6.9 inches".
 Click 1: the default today. Click 2: your own precision, Precision.integer() → "5 feet, 7 inches".
 Click 3: or any other precision you want (two decimals).
 Click 4: a small fix is coming: by default, the last unit of mixed units will be rounded to an integer
@@ -1342,7 +1375,7 @@ Until then, set the precision yourself. It always wins over the default.
 | en-US-u-ms-metric | 180 centimeters |
 
 ::: notes
-[18:00–18:45] All outputs are real ICU 79 (main) results, identical in ICU4J and ICU4C.
+[18:20–19:05] All outputs are real ICU 79 (main) results, identical in ICU4J and ICU4C.
 :::
 
 # Road distance: same code, different values
@@ -1356,7 +1389,7 @@ Until then, set the precision yourself. It always wins over the default.
 Bonus, 30°C with usage `weather` in `en-US` → **86 degrees Fahrenheit**
 
 ::: notes
-[18:45–20:30] Callback to the opening: 30°C, the beach day, is "86 degrees Fahrenheit" for a US user.
+[19:05–20:50] Callback to the opening: 30°C, the beach day, is "86 degrees Fahrenheit" for a US user.
 Skip if behind: the weather bonus.
 :::
 
@@ -1365,7 +1398,7 @@ Skip if behind: the weather bonus.
 ## Grammatical gender and case in `MessageFormat` sentences
 
 ::: notes
-[20:30] Checkpoint. In real apps, units don't appear in isolation: they sit inside sentences
+[20:50] Checkpoint. In real apps, units don't appear in isolation: they sit inside sentences
 formatted with MessageFormat, where the sentence needs the unit's gender and case.
 :::
 
@@ -1400,7 +1433,7 @@ You ➜ ICU: `DisplayOptions`
 ::::
 
 ::: notes
-[20:30–21:15] Before the code, the big picture: two problems that look alike but go in opposite directions.
+[20:50–21:35] Before the code, the big picture: two problems that look alike but go in opposite directions.
 Click 1, gender: the unit has a gender, and the rest of the sentence must agree with it.
 You read it from ICU (getNounClass), and the message picks the right words.
 Click 2, case: the sentence decides the case (here "mit" needs the dative), and the unit must change form.
@@ -1414,7 +1447,7 @@ changing the form of a word is "inflection".
 ## The unit changes the sentence ➜ ask ICU: `getNounClass()`
 
 ::: notes
-[21:15] Part 1: gender.
+[21:35] Part 1: gender.
 :::
 
 # Grammatical gender: the unit changes the sentence
@@ -1431,7 +1464,7 @@ A French app offers a free trial: `{duration} offert` ("… free")
 **➜ The adjective agrees with the unit, so we need the unit's grammatical gender:** `getNounClass()`
 
 ::: notes
-[21:15–22:00] A free-trial banner: "1 mois offert" (1 month free) is fine, but the same message
+[21:35–22:20] A free-trial banner: "1 mois offert" (1 month free) is fine, but the same message
 with a week gives "1 semaine offert", which is wrong: semaine is feminine, so the adjective
 becomes "offerte". The message has to know the gender of the unit, and only ICU knows it
 (the unit can come from data or from the router).
@@ -1475,7 +1508,7 @@ String text = trial.format(Map.of("gender", gender, "duration", duration.toStrin
 ::::
 
 ::: notes
-[22:00–23:30] Click through:
+[22:20–23:50] Click through:
 6: format the duration with ICU ("1 semaine").
 7: ask the formatted number for its noun class: feminine.
 9–11: the message selects on the gender (select, not plural).
@@ -1496,7 +1529,7 @@ Real messages also need plural selection; kept to 1 here.
 The router picks the unit, so the `MessageFormat` sentence has to follow it.
 
 ::: notes
-[23:30–23:45] Skip if behind. Real ICU4C output.
+[23:50–24:05] Skip if behind. Real ICU4C output.
 With usage, the router picks the unit per value, so the gender can change with the value.
 Note: ICU4J currently returns UNDEFINED from getNounClass() whenever usage() is set
 (found while preparing this talk). Decide before the talk: fix, or mention it.
@@ -1507,7 +1540,7 @@ Note: ICU4J currently returns UNDEFINED from getNounClass() whenever usage() is 
 ## The sentence changes the unit ➜ tell ICU: `DisplayOptions`
 
 ::: notes
-[23:45] Part 2: case.
+[24:05] Part 2: case.
 :::
 
 # Grammatical case: the sentence changes the unit
@@ -1526,7 +1559,7 @@ In German, the sentence decides the **case**, and the unit changes with it:
 **➜ The message knows the case; ICU inflects the unit:** `DisplayOptions` + `GrammaticalCase`
 
 ::: notes
-[23:45–24:45] "100 km/h are allowed" vs "he drives at 100 km/h".
+[24:05–25:05] "100 km/h are allowed" vs "he drives at 100 km/h".
 The preposition "mit" requires the dative, so "Kilometer" becomes "Kilometern".
 Only the first part of the compound unit changes ("pro Stunde" stays).
 Unlike gender, the case comes from the sentence, so the message passes it to ICU.
@@ -1543,7 +1576,7 @@ Unlike gender, the case comes from the sentence, so the message passes it to ICU
 | locative / prepositional | — | 3 metrach | 3 метрах |
 
 ::: notes
-[24:45–25:30] Skip if behind. Real ICU output. German has four cases, so instrumental and locative do not apply.
+[25:05–25:50] Skip if behind. Real ICU output. German has four cases, so instrumental and locative do not apply.
 Polish and Russian have more cases, so the unit has more forms.
 :::
 
@@ -1581,7 +1614,7 @@ String text = drives.format(Map.of("speed", speed));
 ::::
 
 ::: notes
-[25:30–28:30] Click through:
+[25:50–28:50] Click through:
 4–6: ask for the dative, because the message says "mit {speed}".
 9: "100 Kilometern pro Stunde".
 11–12: the sentence: "Er fährt mit 100 Kilometern pro Stunde."
@@ -1594,7 +1627,7 @@ ICU4C: DisplayOptions::builder().setGrammaticalCase(UDISPOPT_GRAMMATICAL_CASE_DA
 ## Progress and what’s coming
 
 ::: notes
-[28:30] Checkpoint.
+[28:50] Checkpoint.
 :::
 
 # ICU4X today (experimental)
@@ -1605,7 +1638,7 @@ ICU4C: DisplayOptions::builder().setGrammaticalCase(UDISPOPT_GRAMMATICAL_CASE_DA
 - `duration`: duration formatter
 
 ::: notes
-[28:30–29:30] Confirm the current status of each item before the talk.
+[28:50–29:50] Confirm the current status of each item before the talk.
 :::
 
 # What’s coming
@@ -1619,7 +1652,7 @@ ICU4C: DisplayOptions::builder().setGrammaticalCase(UDISPOPT_GRAMMATICAL_CASE_DA
   - Usage-based unit preferences, mixed units, and grammatical case & gender
 
 ::: notes
-[29:30–31:30] Callback to slide 2: ECMAScript's Amount proposal keeps the number and unit together,
+[29:50–31:50] Callback to slide 2: ECMAScript's Amount proposal keeps the number and unit together,
 and Smart Unit Preferences brings CLDR usage-based routing and mixed units to JavaScript,
 backed by ICU4X.
 :::
@@ -1632,7 +1665,7 @@ backed by ICU4X.
 - If needed, check the noun class so the rest of the sentence agrees
 
 ::: notes
-[31:30–32:30] Quick recap, one sentence per point.
+[31:50–32:50] Quick recap, one sentence per point.
 :::
 
 # Questions! {.cover data-background-gradient="linear-gradient(135deg, #312e81 0%, #6d28d9 55%, #db2777 100%)"}
@@ -1640,15 +1673,15 @@ backed by ICU4X.
 ```{=html}
 <div class="qr-row">
   <figure class="qr-card"><img class="qr-box" src="qr-page.svg" alt="QR code for my page: younies.github.io"><figcaption>My page<span class="qr-url">younies.github.io</span></figcaption></figure>
-  <figure class="qr-card"><img class="qr-box" src="qr-slides.svg" alt="QR code for the slides: younies.github.io/utw/slides"><figcaption>Slides<span class="qr-url">younies.github.io/utw/slides</span></figcaption></figure>
-  <figure class="qr-card"><img class="qr-box" src="qr-code.svg" alt="QR code for the code demo: younies.github.io/utw/code"><figcaption>Code demo<span class="qr-url">younies.github.io/utw/code</span></figcaption></figure>
+  <figure class="qr-card"><img class="qr-box" src="qr-slides.svg" alt="QR code for the slides: younies.github.io/utw2026/slides"><figcaption>Slides<span class="qr-url">younies.github.io/utw2026/slides</span></figcaption></figure>
+  <figure class="qr-card"><img class="qr-box" src="qr-code.svg" alt="QR code for the code demo: younies.github.io/utw2026/code"><figcaption>Code demo<span class="qr-url">younies.github.io/utw2026/code</span></figcaption></figure>
 </div>
 ```
 
 ::: notes
-[32:30–40:00] Checkpoint. Questions; 40:00–45:00 is buffer.
-QR codes: my page (https://younies.github.io/), the slides (https://younies.github.io/utw/slides/),
-and the code demo (https://younies.github.io/utw/code/). The two short links forward to the talk
+[32:50–40:00] Checkpoint. Questions; 40:00–45:00 is buffer.
+QR codes: my page (https://younies.github.io/), the slides (https://younies.github.io/utw2026/slides/),
+and the code demo (https://younies.github.io/utw2026/code/). The two short links forward to the talk
 folder on younies.github.io; the codes are qr-page.svg, qr-slides.svg, and qr-code.svg (made with segno).
 References if asked: UTS #35 Part 6 (https://www.unicode.org/reports/tr35/tr35-info.html),
 ICU number formatting (https://unicode-org.github.io/icu/userguide/format_parse/numbers/),

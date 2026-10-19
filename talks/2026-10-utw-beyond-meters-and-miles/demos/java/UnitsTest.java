@@ -160,16 +160,23 @@ public class UnitsTest {
                 formatWithUsage("en-GB", "liter-per-100-kilometer", "vehicle-fuel", 6.5));
     }
 
-    // Slide "Step 2: Cascading convert".
+    // Slide "Step 2: Cascading convert": two cascades, each with its formatted result.
     static void stepTwoMixedUnits() {
         double feet = convert("meter", "foot", 1.8);
         assertOnSlide("5.9055 ft", format("foot", feet, SHORT, Precision.maxFraction(4)));
         assertOnSlide("0.9055 ft", format("foot", feet - 5, SHORT, Precision.maxFraction(4)));
         assertOnSlide("10.8661 in", format("inch", convert("foot", "inch", feet - 5),
                 SHORT, Precision.maxFraction(4)));
-        assertPersonHeight("en-US", "5 feet, 11 inches", "foot-and-inch");
-        assertPersonHeight("fr-FR", "1 mètre et 80 centimètres", "meter-and-centimeter");
-        assertPersonHeight("ar-EG", "متر و٨٠ سنتيمتر", "meter-and-centimeter");
+        assertOnSlide("× 12", "× " + plain(convert("foot", "inch", 1)));
+        assertOnSlide("5 feet, 11 inches", personHeight("en-US").format(1.8));
+        double meters = convert("foot", "meter", 6);
+        assertOnSlide("1.8288 m", format("meter", meters, SHORT, Precision.maxFraction(4)));
+        assertOnSlide("0.8288 m", format("meter", meters - 1, SHORT, Precision.maxFraction(4)));
+        assertOnSlide("82.88 cm", format("centimeter", convert("meter", "centimeter", meters - 1),
+                SHORT, Precision.maxFraction(2)));
+        assertOnSlide("× 100", "× " + plain(convert("meter", "centimeter", 1)));
+        assertOnSlide("1 mètre et 83 centimètres",
+                formatWithUsage("fr-FR", "foot", "person-height", 6));
     }
 
     // Slide "Step 3: Round through the cascade" (1.826 m).
