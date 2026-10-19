@@ -1,5 +1,6 @@
 /* Styles for the whole site. Colors follow the light or dark setting of the
- * reader's system; data-theme="light" or "dark" on <html> forces one. */
+ * reader's system until they use the switch in the header, which sets
+ * data-theme="light" or "dark" on <html> (site.js remembers the choice). */
 
 :root {
   color-scheme: light dark;
@@ -132,7 +133,7 @@ a { color: var(--link); }
   display: flex;
   flex-wrap: wrap;
   gap: .2rem;
-  margin-inline-end: -.7rem;
+  margin-inline-start: auto;
 }
 
 .site-nav a {
@@ -145,6 +146,44 @@ a { color: var(--link); }
 }
 .site-nav a:hover { background: var(--bg-soft); color: var(--text); }
 .site-nav a[aria-current="page"] { background: var(--accent-soft); color: var(--accent); }
+
+/* The light/dark switch shows a moon in the light theme and a sun in the dark one. */
+.theme-toggle {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: none;
+  color: var(--muted);
+  cursor: pointer;
+}
+.theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
+.theme-toggle svg {
+  width: 1.05rem;
+  height: 1.05rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.theme-toggle .icon-sun,
+:root[data-theme="dark"] .theme-toggle .icon-moon { display: none; }
+:root[data-theme="dark"] .theme-toggle .icon-sun { display: block; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .theme-toggle .icon-moon { display: none; }
+  :root:not([data-theme="light"]) .theme-toggle .icon-sun { display: block; }
+}
+
+/* On phones the menu gets its own row under the name and the switch. */
+@media (max-width: 560px) {
+  .theme-toggle { order: 2; margin-inline-start: auto; }
+  .site-nav { order: 3; flex-basis: 100%; margin-inline: -.7rem; }
+}
 
 .site-footer {
   border-top: 1px solid var(--border);

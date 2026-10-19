@@ -1,5 +1,27 @@
 // Small touches on top of the static pages.
 
+// The switch in the header flips between the light and dark themes. The choice
+// is remembered; picking the theme that matches the system setting goes back
+// to following the system.
+{
+  const root = document.documentElement;
+  const system = matchMedia('(prefers-color-scheme: dark)');
+  document.querySelector('.theme-toggle')?.addEventListener('click', () => {
+    const dark = root.dataset.theme ? root.dataset.theme === 'dark' : system.matches;
+    const next = dark ? 'light' : 'dark';
+    const followSystem = next === (system.matches ? 'dark' : 'light');
+    if (followSystem) delete root.dataset.theme;
+    else root.dataset.theme = next;
+    try {
+      if (followSystem) localStorage.removeItem('theme');
+      else localStorage.setItem('theme', next);
+    } catch {
+      // Storage can be off (for example, in private windows); the switch still
+      // works on this page.
+    }
+  });
+}
+
 // Shows the "Upcoming" badge on talks and meetups that haven't happened yet.
 {
   const now = new Date();
