@@ -7,10 +7,6 @@ lang = "en"
 # Where the site is published. The feed, the sitemap, and the 404 page use it.
 url = "https://younies.github.io/"
 
-# The source repository, for the "Code" and "Source" links.
-repo = "https://github.com/younies/younies.github.io"
-branch = "main"
-
 # Extra files or folders to leave out of the site (glob patterns).
 exclude = []
 

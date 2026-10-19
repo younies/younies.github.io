@@ -5,10 +5,9 @@
 --   [notes](README.md)        -> the README on GitHub (README files are not
 --                                part of the site)
 --
--- tools/build.py sets SITE_REPO and SITE_BRANCH.
+-- tools/build.py sets SITE_REPO to the repository's address on GitHub.
 
-local repo = os.getenv('SITE_REPO')
-local branch = os.getenv('SITE_BRANCH') or 'main'
+local repo = os.getenv('SITE_REPO') or ''
 local source = PANDOC_STATE.input_files[1] or ''
 
 -- Joins a relative link to the folder of the page and resolves `.` and `..`.
@@ -34,8 +33,9 @@ function Link(link)
   end
   local path, rest = target:match('^([^?#]*)(.*)$')
   if path == 'README.md' or path:match('/README%.md$') then
-    if repo then
-      link.target = repo .. '/blob/' .. branch .. '/' .. resolve(path) .. rest
+    if repo ~= '' then
+      -- In GitHub addresses, HEAD stands for the default branch.
+      link.target = repo .. '/blob/HEAD/' .. resolve(path) .. rest
       return link
     end
   elseif path:match('%.md$') then

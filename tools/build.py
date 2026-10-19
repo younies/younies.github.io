@@ -147,9 +147,27 @@ def load_config() -> dict:
     with open(ROOT / "site.toml", "rb") as f:
         config = tomllib.load(f)
     config["url"] = config["url"].rstrip("/") + "/"
-    config.setdefault("branch", "main")
     config.setdefault("sections", {})
+    config["repo"] = find_repo()
     return config
+
+
+def find_repo() -> str:
+    """The address of this repository on GitHub, for the Code and Source links.
+
+    GitHub Actions names the repository in GITHUB_REPOSITORY; locally, it comes
+    from the git remote. Returns "" when neither is available.
+    """
+    if name := os.environ.get("GITHUB_REPOSITORY"):
+        return f"{os.environ.get('GITHUB_SERVER_URL', 'https://github.com')}/{name}"
+    try:
+        remote = subprocess.run(
+            ["git", "remote", "get-url", "origin"], cwd=ROOT, capture_output=True, text=True, check=True
+        ).stdout.strip()
+    except (OSError, subprocess.CalledProcessError):
+        return ""
+    match = re.fullmatch(r"(?:https://|ssh://git@|git@)github\.com[:/](.+?)(?:\.git)?/?", remote)
+    return f"https://github.com/{match.group(1)}" if match else ""
 
 
 def excluded(name: str, patterns: list[str]) -> bool:
@@ -197,7 +215,7 @@ def convert(src: str, config: dict) -> tuple[dict, str, str]:
         f"--template={TOOLS / 'fragment.html'}",
         f"--lua-filter={TOOLS / 'links.lua'}",
     ]
-    env = dict(os.environ, SITE_REPO=config["repo"], SITE_BRANCH=config["branch"])
+    env = dict(os.environ, SITE_REPO=config["repo"])
     output = run(command, ROOT, f"pandoc on {src}", env)
     meta, rest = output.split(TOC_MARK, 1)
     toc, body = rest.split(BODY_MARK, 1)
@@ -443,8 +461,9 @@ def event_links(page: Page, base: str, site: Site) -> list[tuple[str, str]]:
     if not pdf and page.is_index and (folder / "slides.pdf").exists():
         pdf = "slides.pdf"
     code = page.url_field("code")
-    if not code and page.is_index and (folder / "demos").is_dir():
-        code = f"{site.config['repo']}/tree/{site.config['branch']}/{page.folder}"
+    if not code and page.is_index and (folder / "demos").is_dir() and site.config["repo"]:
+        # In GitHub addresses, HEAD stands for the default branch.
+        code = f"{site.config['repo']}/tree/HEAD/{page.folder}"
     for label, url in (("Slides", slides), ("PDF", pdf), ("Video", page.url_field("video")), ("Code", code)):
         if url:
             links.append((label, url if is_absolute(url) else base + url))
@@ -531,7 +550,7 @@ def render_feed_links(root: str, site: Site) -> str:
 
 
 def render_footer(root: str, site: Site) -> str:
-    links = [f'<a href="{attr(site.config["repo"])}">Source</a>']
+    links = [f'<a href="{attr(site.config["repo"])}">Source</a>'] if site.config["repo"] else []
     links += [f'<a href="{attr(root + name)}/feed.xml">RSS</a>' for name, _ in feeds(site)]
     return " · ".join(links)
 
