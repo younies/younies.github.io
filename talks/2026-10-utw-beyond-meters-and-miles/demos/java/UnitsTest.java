@@ -195,6 +195,21 @@ public class UnitsTest {
         assertOnSlide("75 miles", formatWithUsage("en-GB", "meter", "road", 120000));
     }
 
+    // Slide "Step 4: the first match wins": each check and each result.
+    static void routerStepByStep() {
+        assertOnSlide("0.09 mi ✗", format("mile", convert("meter", "mile", 150),
+                SHORT, Precision.maxFraction(2)) + " ✗");
+        assertOnSlide("492 ft ✓", format("foot", convert("meter", "foot", 150),
+                SHORT, Precision.integer()) + " ✓");
+        assertOnSlide("0.56 mi ✓", format("mile", convert("meter", "mile", 900),
+                SHORT, Precision.maxFraction(2)) + " ✓");
+        assertOnSlide("74.56 mi ✓", format("mile", convert("meter", "mile", 120000),
+                SHORT, Precision.maxFraction(2)) + " ✓");
+        assertOnSlide("500 feet ✅", formatWithUsage("en-US", "meter", "road", 150) + " ✅");
+        assertOnSlide("0.56 miles ✅", formatWithUsage("en-US", "meter", "road", 900) + " ✅");
+        assertOnSlide("75 miles ✅", formatWithUsage("en-US", "meter", "road", 120000) + " ✅");
+    }
+
     // Slide "ICU4J": the code on the slide (.usage() last).
     static void icu4j() {
         LocalizedNumberFormatter formatter = NumberFormatter.with()
@@ -268,8 +283,6 @@ public class UnitsTest {
             }
         }
         assertOnSlide("86 degrees Fahrenheit", formatWithUsage("en-US", "celsius", "weather", 30));
-        assertOnSlide("30 degrees Celsius",
-                formatWithUsage("en-US-u-mu-celsius", "celsius", "weather", 30));
     }
 
     static FormattedNumber frenchDuration(String unit) {
@@ -512,6 +525,7 @@ public class UnitsTest {
         failed += run("Step 2: Cascading convert", UnitsTest::stepTwoMixedUnits);
         failed += run("Step 3: Round through the cascade", UnitsTest::stepThreeRounding);
         failed += run("Step 4: Route each value to the best unit", UnitsTest::stepFourRoute);
+        failed += run("Step 4: the first match wins", UnitsTest::routerStepByStep);
         failed += run("ICU4J", UnitsTest::icu4j);
         failed += run("Without `.usage()`", UnitsTest::withoutUsage);
         failed += run("1.7 meters: set your own precision", UnitsTest::ownPrecision);

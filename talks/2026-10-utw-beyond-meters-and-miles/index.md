@@ -34,7 +34,7 @@ naturally for every user. You will learn how to:
 
 ## Outline
 
-1. What do we need to format a unit?
+1. What do we need for locale-aware unit formatting?
 2. CLDR: unit preferences and conversion data
 3. ICU: convert, cascade, round, and route
 4. Tutorial 1: person height and road distance (ICU4J and ICU4C)

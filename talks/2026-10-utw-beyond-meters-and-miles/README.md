@@ -41,6 +41,7 @@ naturally for every user. You will learn how to:
 | [demos/java/UnitsTest.java](demos/java/UnitsTest.java) | ICU4J test cases, one per slide, for every output on the slides |
 | [demos/cpp/units_test.cpp](demos/cpp/units_test.cpp) | The same test cases in ICU4C, where the C++ API has the output |
 | [index.md](index.md) | The talk page on the site, which shows the slides |
+| [qr-page.svg](qr-page.svg), [qr-slides.svg](qr-slides.svg), [qr-code.svg](qr-code.svg) | QR codes on the Questions slide: my page, the slides (younies.github.io/utw/slides), and the code demo (younies.github.io/utw/code), made with [segno](https://github.com/heuer/segno) |
 
 ## Build, present, and export
 

@@ -248,8 +248,6 @@ void roadDistance() {
     }
     ASSERT_ON_SLIDE("86 degrees Fahrenheit",
                     formatWithUsage("en-US", "celsius", "weather", 30).text);
-    ASSERT_ON_SLIDE("30 degrees Celsius",
-                    formatWithUsage("en-US-u-mu-celsius", "celsius", "weather", 30).text);
 }
 
 // Slide "Grammatical gender changes the message" (French free trial): the

@@ -144,9 +144,9 @@
   margin: 0.1em 0;
 }
 
-#what-do-we-need-to-format-a-unit p,
-#what-do-we-need-to-format-a-unit ul {
-  font-size: 0.88em;
+#what-do-we-need-for-locale-aware-unit-formatting p,
+#what-do-we-need-for-locale-aware-unit-formatting ul {
+  font-size: 0.82em;
   margin: 0.35em 0;
 }
 
@@ -741,4 +741,164 @@
 
 .reveal .gram-card p {
   margin: 0.35em 0;
+}
+
+/* "Step 1": the one formula for every pair of units. */
+.reveal .formula {
+  display: inline-block;
+  padding: 0.15em 0.7em;
+  font-family: var(--r-code-font);
+  font-size: 1.05em;
+  font-weight: 700;
+  color: #312e81;
+  background: #eef2ff;
+  border-radius: 12px;
+}
+
+/* "Step 3": round the inches, then carry back up. */
+.reveal svg.carry .tree-leaf .name {
+  font-size: 22px;
+}
+
+.reveal svg.carry .tree-leaf rect.bad {
+  stroke: #ef4444;
+  stroke-width: 3;
+}
+
+.reveal svg.carry .tree-leaf rect.good {
+  stroke: #059669;
+  stroke-width: 3;
+}
+
+.reveal svg.carry .carry-step {
+  stroke: #94a3b8;
+  stroke-width: 3;
+  marker-end: url(#carry-arrow);
+}
+
+.reveal svg.carry .carry-back {
+  fill: none;
+  stroke: #059669;
+  stroke-width: 3;
+  marker-end: url(#carry-back-arrow);
+}
+
+.reveal svg.carry .carry-op {
+  font-family: var(--r-code-font);
+  font-size: 16px;
+  font-weight: 700;
+  fill: #4f46e5;
+}
+
+.reveal svg.carry .carry-op.good {
+  fill: #059669;
+}
+
+.reveal svg.carry .carry-note {
+  font-size: 18px;
+  font-style: italic;
+  fill: var(--slate-500);
+}
+
+.reveal svg.carry .carry-verdict {
+  font-size: 24px;
+  font-weight: 800;
+}
+
+.reveal svg.carry .carry-verdict.bad {
+  fill: #ef4444;
+}
+
+.reveal svg.carry .carry-verdict.good {
+  fill: #059669;
+}
+
+/* "Step 4: the first match wins": the router, row by row. */
+.reveal svg.router .router-edge text {
+  font-size: 14px;
+  font-weight: 700;
+  fill: var(--slate-500);
+}
+
+.reveal svg.router .router-edge text.no {
+  text-anchor: start;
+}
+
+.reveal svg.router .route-test rect {
+  fill: #ffffff;
+  stroke: #e2e8f0;
+  stroke-width: 1.5;
+}
+
+.reveal svg.router .route-test text {
+  font-family: var(--r-code-font);
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.reveal svg.router .route-test.bad text {
+  fill: #ef4444;
+}
+
+.reveal svg.router .route-test.good text {
+  fill: #059669;
+}
+
+/* An English translation under a sentence in another language. */
+.reveal .translation {
+  display: inline-block;
+  font-size: 0.8em;
+  font-style: italic;
+  color: var(--slate-500);
+}
+
+/* "Questions!": room for three QR codes. */
+.reveal .qr-row {
+  display: flex;
+  justify-content: center;
+  gap: 1.2em;
+  margin-top: 0.6em;
+}
+
+.reveal .qr-card {
+  margin: 0;
+  text-align: center;
+}
+
+.reveal .qr-box {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 220px;
+  height: 220px;
+  margin: 0 auto;
+  font-size: 0.6em;
+  font-weight: 600;
+  color: var(--slate-500);
+  background: #ffffff;
+  border: 4px dashed #c7d2fe;
+  border-radius: 16px;
+}
+
+.reveal img.qr-box {
+  padding: 10px;
+  border-style: solid;
+  object-fit: contain;
+}
+
+.reveal .qr-card figcaption {
+  margin-top: 0.4em;
+  font-size: 0.75em;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+/* The short link under each QR code, for anyone who can't scan it. */
+.reveal .qr-card .qr-url {
+  display: block;
+  margin-top: 0.15em;
+  font-size: 0.7em;
+  font-weight: 500;
+  opacity: 0.85;
 }
